@@ -86,18 +86,26 @@ class Login extends React.Component {
                   block
                   style={{
                     marginTop: 20,
+                  }}
+                  onPress={() => {
+                    this.props.navigation.navigate('TermsAndConditions');
                   }}>
                   <Text>Log in</Text>
                 </Button>
               </Form>
             </View>
             <View style={{alignSelf: 'center'}}>
-              <Button transparent onPress={()=>{
-                this.props.navigation.navigate('ForgotPassword')
-              }} >
-                <Text style={{
-                  color:colors.grey
-                }}>Forgot Password?</Text>
+              <Button
+                transparent
+                onPress={() => {
+                  this.props.navigation.navigate('ForgotPassword');
+                }}>
+                <Text
+                  style={{
+                    color: colors.grey,
+                  }}>
+                  Forgot Password?
+                </Text>
               </Button>
             </View>
           </View>

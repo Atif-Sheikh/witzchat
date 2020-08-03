@@ -17,6 +17,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from './src/views/auth/login';
 import ForgotPassword from './src/views/auth/forgotPassword';
+import TermsAndConditions from './src/views/auth/termsAndConditions';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +49,10 @@ const App = () => {
           mode="modal">
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+          <Stack.Screen
+            name="TermsAndConditions"
+            component={TermsAndConditions}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </StyleProvider>
