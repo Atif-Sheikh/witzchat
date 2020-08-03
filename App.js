@@ -15,11 +15,24 @@ import material from './native-base-theme/variables/material';
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Login from './src/views/auth/login';
 import ForgotPassword from './src/views/auth/forgotPassword';
 import TermsAndConditions from './src/views/auth/termsAndConditions';
+import Calls from './src/views/main/calls';
+import Chats from './src/views/main/chats';
+import Settings from './src/views/main/settings';
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const TabNavigatoins = () => (
+  <Tab.Navigator>
+    <Tab.Screen name="Calls" component={Calls} />
+    <Tab.Screen name="Chats" component={Chats} />
+    <Tab.Screen name="Settings" component={Settings} />
+  </Tab.Navigator>
+);
 
 const App = () => {
   return (
@@ -53,7 +66,9 @@ const App = () => {
             name="TermsAndConditions"
             component={TermsAndConditions}
           />
+          <Stack.Screen name="Main" component={TabNavigatoins} />
         </Stack.Navigator>
+        {/* <TabNavigatoins /> */}
       </NavigationContainer>
     </StyleProvider>
   );

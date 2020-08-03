@@ -88,7 +88,7 @@ class Login extends React.Component {
                     marginTop: 20,
                   }}
                   onPress={() => {
-                    this.props.navigation.navigate('TermsAndConditions');
+                    this.props.navigation.navigate('Main');
                   }}>
                   <Text>Log in</Text>
                 </Button>
