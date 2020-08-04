@@ -71,13 +71,16 @@ class Chat extends React.Component {
       },
     ],
   };
+  goBack = () => {
+    this.props.navigation.goBack();
+  };
   render() {
     const {messages} = this.state;
     return (
       <Container>
         <Header transparent>
           <Left>
-            <Button transparent>
+            <Button transparent onPress={this.goBack}>
               <Icon name="chevron-left" type="FontAwesome5" primary />
             </Button>
           </Left>
