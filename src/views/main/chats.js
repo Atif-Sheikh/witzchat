@@ -142,7 +142,7 @@ class Chats extends React.Component {
                 unreadMsgCount={item.unreadMsgCount}
                 showDoubleTick={item.showDoubleTick}
                 showSingleTick={item.showSingleTick}
-                onPressChat={()=>console.log('Navigate to Chat screen')}
+                onPressChat={() => this.props.navigation.navigate('ChatScreen')}
               />
             ))}
           </ScrollView>

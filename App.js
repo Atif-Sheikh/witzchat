@@ -22,6 +22,7 @@ import TermsAndConditions from './src/views/auth/termsAndConditions';
 import Calls from './src/views/main/calls';
 import Chats from './src/views/main/chats';
 import Settings from './src/views/main/settings';
+import ChatScreen from './src/views/main/chat';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -67,8 +68,8 @@ const App = () => {
             component={TermsAndConditions}
           />
           <Stack.Screen name="Main" component={TabNavigatoins} />
+          <Stack.Screen name="ChatScreen" component={ChatScreen} />
         </Stack.Navigator>
-        {/* <TabNavigatoins /> */}
       </NavigationContainer>
     </StyleProvider>
   );

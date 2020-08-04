@@ -274,7 +274,7 @@ export default {
   titleFontSize: 19,
   subTitleFontSize: 14,
   subtitleColor: '#FFF',
-  titleFontColor: '#FFF',
+  titleFontColor: '#000',
 
   // Other
   borderRadiusBase: 2,
