@@ -12,6 +12,7 @@ import {
   Label,
   Icon,
 } from 'native-base';
+import SplashScreen from 'react-native-splash-screen';
 
 import images from '../../constants/images';
 import colors from '../../constants/colors';
@@ -22,6 +23,10 @@ class Login extends React.Component {
     password: '',
     focusedInput: null,
   };
+
+  componentDidMount() {
+    SplashScreen.hide();
+  }
 
   setFocusedInput = (input) => {
     this.setState({focusedInput: input});
