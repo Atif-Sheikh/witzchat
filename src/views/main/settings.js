@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
+import {ScrollView, Image, StyleSheet} from 'react-native';
 import {
   View,
   H3,
@@ -10,23 +10,127 @@ import {
   Label,
   Button,
   Icon,
+  Content,
+  Container,
+  Header,
+  Left,
+  Title,
+  Body,
+  Right,
+  ListItem,
+  Thumbnail,
+  Badge,
 } from 'native-base';
+
+import SearchInput from '../../components/searchInput';
+import CallListItem from '../../components/callListItem';
 
 import colors from '../../constants/colors';
 
 class Settings extends React.Component {
   render() {
+    const listItems = [
+      {
+        name: 'Starred Messages',
+      },
+      {
+        name: 'Account',
+      },
+      {
+        name: 'Chat',
+      },
+      {
+        name: 'Notifications',
+      },
+      {
+        name: 'Data and Storage Usage',
+      },
+      {
+        name: 'Help',
+      },
+    ];
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text>Settings Page</Text>
-      </View>
+      <Container>
+        <Header
+          style={{
+            backgroundColor: colors.lightGrey,
+            borderBottomWidth: 0,
+          }}
+        />
+        <Content
+          contentContainerStyle={{
+            flex: 1,
+            backgroundColor: colors.lightGrey,
+          }}>
+          <View
+            style={{
+              paddingHorizontal: 25,
+              paddingTop: 20,
+            }}>
+            <H3
+              style={{
+                marginBottom: 20,
+              }}>
+              Settings
+            </H3>
+          </View>
+          <ListItem avatar style={[styles.listItem, styles.profile]}>
+            <Left style={{justifyContent: 'center'}}>
+              <Thumbnail
+                source={{
+                  uri:
+                    'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
+                }}
+              />
+            </Left>
+            <Body
+              style={{
+                height: 80,
+                justifyContent: 'center',
+                borderBottomWidth: 0,
+              }}>
+              <Text>Dr Anita T</Text>
+            </Body>
+          </ListItem>
+          <View
+            style={{
+              paddingTop: 20,
+              flex: 1,
+            }}>
+            {listItems.map((item, index) => (
+              <ListItem key={index} style={styles.listItem}>
+                <Body style={styles.settingsListItemBody}>
+                  <Text style={styles.settingsText}>{item.name}</Text>
+                </Body>
+                <Right>
+                  <Icon name="chevron-right" type="FontAwesome5" />
+                </Right>
+              </ListItem>
+            ))}
+          </View>
+        </Content>
+      </Container>
     );
   }
 }
 
 export default Settings;
+
+const styles = StyleSheet.create({
+  listItem: {
+    marginLeft: 0,
+    backgroundColor: colors.white,
+    paddingHorizontal: 25,
+  },
+  profile: {
+    height: 100,
+    justifyContent: 'center',
+  },
+  settingsListItemBody: {
+    height: 40,
+    justifyContent: 'center',
+  },
+  settingsText: {
+    color: colors.grey,
+  },
+});
