@@ -56,6 +56,7 @@ class Settings extends React.Component {
             backgroundColor: colors.lightGrey,
             borderBottomWidth: 0,
           }}
+          androidStatusBarColor={colors.white}
         />
         <Content
           contentContainerStyle={{
@@ -70,7 +71,7 @@ class Settings extends React.Component {
             <H3
               style={{
                 marginBottom: 20,
-              }}>
+              }} heading>
               Settings
             </H3>
           </View>

@@ -27,7 +27,7 @@ const ChatListItem = ({
       avatar
       style={{
         marginLeft: 0,
-        borderBottomColor: 'red',
+        height: 90,
       }}>
       <Left>
         <Thumbnail
@@ -38,10 +38,10 @@ const ChatListItem = ({
       </Left>
       <Body
         style={{
-          height: 80,
+          
         }}>
         <TouchableOpacity onPress={onPressChat}>
-          <Text>{name}</Text>
+          <Text heading>{name}</Text>
           <View style={{flexDirection: 'row'}}>
             {showDoubleTick ? (
               <Icon name="check-double" type="FontAwesome5" primary small />

@@ -17,6 +17,9 @@ export default (variables /* : * */ = variable) => {
     '.primary': {
       color: variables.brandPrimary,
     },
+    '.heading':{
+      fontWeight: 'bold'
+    }
   };
 
   return textTheme;

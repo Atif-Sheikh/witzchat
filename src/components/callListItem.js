@@ -19,7 +19,7 @@ const CallListItem = ({imageUrl, name, callType, time}) => {
       style={{
         marginLeft: 0,
         borderBottomColor: 'red',
-      }}>
+      }} witzlistItem>
       <Left>
         <Thumbnail
           source={{
@@ -31,7 +31,7 @@ const CallListItem = ({imageUrl, name, callType, time}) => {
         style={{
           height: 80,
         }}>
-        <Text>{name}</Text>
+        <Text heading>{name}</Text>
 
         <Text gray>{callType}</Text>
       </Body>

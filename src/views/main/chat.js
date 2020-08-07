@@ -78,7 +78,7 @@ class Chat extends React.Component {
     const {messages} = this.state;
     return (
       <Container>
-        <Header transparent>
+        <Header transparent androidStatusBarColor={colors.white}>
           <Left>
             <Button transparent onPress={this.goBack}>
               <Icon name="chevron-left" type="FontAwesome5" primary />

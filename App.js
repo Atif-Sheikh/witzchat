@@ -15,7 +15,7 @@ import material from './native-base-theme/variables/material';
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Login from './src/views/auth/login';
 import ForgotPassword from './src/views/auth/forgotPassword';
 import TermsAndConditions from './src/views/auth/termsAndConditions';
@@ -24,11 +24,19 @@ import Chats from './src/views/main/chats';
 import Settings from './src/views/main/settings';
 import ChatScreen from './src/views/main/chat';
 
+import { StatusBar } from 'react-native'
+
+import colors from './src/constants/colors';
+
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 const TabNavigatoins = () => (
-  <Tab.Navigator>
+  <Tab.Navigator
+    activeColor={colors.primary}
+    inactiveColor={colors.grey}
+    barStyle={{backgroundColor: colors.white}}
+    initialRouteName="Chats">
     <Tab.Screen name="Calls" component={Calls} />
     <Tab.Screen name="Chats" component={Chats} />
     <Tab.Screen name="Settings" component={Settings} />
@@ -38,6 +46,8 @@ const TabNavigatoins = () => (
 const App = () => {
   return (
     <StyleProvider style={getTheme(material)}>
+      <>
+      <StatusBar backgroundColor={colors.white} />
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
@@ -71,6 +81,7 @@ const App = () => {
           <Stack.Screen name="ChatScreen" component={ChatScreen} />
         </Stack.Navigator>
       </NavigationContainer>
+      </>
     </StyleProvider>
   );
 };
