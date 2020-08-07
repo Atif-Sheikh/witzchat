@@ -445,7 +445,10 @@ export default (variables /* : * */ = variable) => {
     borderColor: variables.listBorderColor,
     '.witzlistItem': {
       'NativeBase.Body': {
-        borderBottomColor: colors.primary,
+        borderBottomColor: colors.grey,
+      },
+      'NativeBase.Right': {
+        borderBottomColor: colors.grey,
       },
     },
   };
