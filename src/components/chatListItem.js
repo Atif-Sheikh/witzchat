@@ -27,8 +27,7 @@ const ChatListItem = ({
       avatar
       style={{
         marginLeft: 0,
-        height: 90,
-      }}>
+      }} witzlistItem>
       <Left>
         <Thumbnail
           source={{
@@ -38,11 +37,11 @@ const ChatListItem = ({
       </Left>
       <Body
         style={{
-          
+          height: 80,
         }}>
         <TouchableOpacity onPress={onPressChat}>
           <Text heading>{name}</Text>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', marginTop: 5}}>
             {showDoubleTick ? (
               <Icon name="check-double" type="FontAwesome5" primary small />
             ) : showSingleTick ? (
@@ -58,7 +57,10 @@ const ChatListItem = ({
         </TouchableOpacity>
       </Body>
       <TouchableOpacity onPress={onPressChat}>
-        <Right>
+        <Right
+          style={{
+            height: 80,
+          }}>
           <Text primary={unreadMsgCount > 0} gray={unreadMsgCount === 0}>
             {time}
           </Text>

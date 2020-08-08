@@ -71,7 +71,8 @@ class Settings extends React.Component {
             <H3
               style={{
                 marginBottom: 20,
-              }} heading>
+              }}
+              heading>
               Settings
             </H3>
           </View>
@@ -82,6 +83,7 @@ class Settings extends React.Component {
                   uri:
                     'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
                 }}
+                large
               />
             </Left>
             <Body
@@ -90,7 +92,7 @@ class Settings extends React.Component {
                 justifyContent: 'center',
                 borderBottomWidth: 0,
               }}>
-              <Text>Dr Anita T</Text>
+              <H3 heading>Dr Anita T</H3>
             </Body>
           </ListItem>
           <View

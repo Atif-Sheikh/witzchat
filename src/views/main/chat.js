@@ -95,8 +95,14 @@ class Chat extends React.Component {
                   uri:
                     'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
                 }}
+                style={{
+                  height: 50,
+                  width: 50,
+                }}
               />
-              <Title dark>Dr Anita T.</Title>
+              <Title heading style={{marginLeft: 10}}>
+                Dr Anita T.
+              </Title>
             </View>
           </Body>
           <Right>
@@ -117,7 +123,9 @@ class Chat extends React.Component {
             contentContainerStyle={{
               paddingHorizontal: 20,
             }}>
-            <Text style={{alignSelf: 'center'}}>Tue, 14 Jul</Text>
+            <Text style={{alignSelf: 'center'}} dark>
+              Tue, 14 Jul
+            </Text>
             {messages.map((item, index) => (
               <ChatBubble {...item} key={index} />
             ))}

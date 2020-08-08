@@ -18,6 +18,9 @@ export default (variables /* : * */ = variable) => {
     '.dark': {
       color: variables.titleFontColor,
     },
+    '.heading': {
+      fontWeight: 'bold'
+    },
   };
 
   return titleTheme;
