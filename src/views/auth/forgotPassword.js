@@ -44,6 +44,7 @@ class ForgotPassword extends React.Component {
             backgroundColor: colors.white,
             padding: 40,
             borderRadius: 40,
+            margin: 20,
           }}>
           <Button
             rounded
