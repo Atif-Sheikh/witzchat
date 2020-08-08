@@ -26,6 +26,8 @@ import ChatScreen from './src/views/main/chat';
 
 import {StatusBar} from 'react-native';
 
+import {slideAnimation} from './animations';
+
 import colors from './src/constants/colors';
 
 const Stack = createStackNavigator();
@@ -86,25 +88,33 @@ const App = () => {
               headerShown: false,
               cardStyle: {backgroundColor: 'transparent'},
               cardOverlayEnabled: true,
-              cardStyleInterpolator: ({current: {progress}}) => ({
-                cardStyle: {
-                  opacity: progress.interpolate({
-                    inputRange: [0, 0.5, 0.9, 1],
-                    outputRange: [0, 0.25, 0.7, 1],
-                  }),
-                },
-                overlayStyle: {
-                  opacity: progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 0.5],
-                    extrapolate: 'clamp',
-                  }),
-                },
-              }),
+              cardStyleInterpolator: slideAnimation,
             }}
             mode="modal">
             <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+            <Stack.Screen
+              name="ForgotPassword"
+              component={ForgotPassword}
+              options={{
+                cardStyle: {backgroundColor: 'transparent'},
+                cardOverlayEnabled: true,
+                cardStyleInterpolator: ({current: {progress}}) => ({
+                  cardStyle: {
+                    opacity: progress.interpolate({
+                      inputRange: [0, 0.5, 0.9, 1],
+                      outputRange: [0, 0.25, 0.7, 1],
+                    }),
+                  },
+                  overlayStyle: {
+                    opacity: progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, 0.5],
+                      extrapolate: 'clamp',
+                    }),
+                  },
+                }),
+              }}
+            />
             <Stack.Screen
               name="TermsAndConditions"
               component={TermsAndConditions}
