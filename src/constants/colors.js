@@ -4,6 +4,7 @@ const colors = {
   grey: '#7F7F7F',
   lightGrey: '#F2F2F2',
   userChatBubble: '#DCF7F6',
+  darkGreen: '#36572B',
 };
 
 export default colors;

@@ -24,6 +24,7 @@ import {
 
 import SearchInput from '../../components/searchInput';
 import CallListItem from '../../components/callListItem';
+import ToggleButtons from '../../components/toggleButtons';
 
 import colors from '../../constants/colors';
 
@@ -87,6 +88,7 @@ class Calls extends React.Component {
         callType: 'Incoming',
       },
     ],
+    callType: 'all',
   };
   render() {
     const {chats} = this.state;
@@ -98,8 +100,15 @@ class Calls extends React.Component {
               <Text style={{color: colors.primary}}>Edit</Text>
             </Button>
           </Left>
-          <Body />
-          <Right />
+          <Body>
+            <ToggleButtons
+              options={['all', 'missed']}
+              value={this.state.callType}
+              onPress={(value) => this.setState({callType: value})}
+              activeColor={colors.white}
+              activeTextColor={colors.grey}
+            />
+          </Body>
         </Header>
         <Content
           contentContainerStyle={{
@@ -117,7 +126,8 @@ class Calls extends React.Component {
               <H3
                 style={{
                   marginBottom: 20,
-                }} heading>
+                }}
+                heading>
                 Calls
               </H3>
             </View>

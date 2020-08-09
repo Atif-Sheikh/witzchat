@@ -13,15 +13,19 @@ import {
   Icon,
 } from 'native-base';
 import SplashScreen from 'react-native-splash-screen';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import images from '../../constants/images';
 import colors from '../../constants/colors';
+
+import ToggleButtons from '../../components/toggleButtons';
 
 class Login extends React.Component {
   state = {
     email: '',
     password: '',
     focusedInput: null,
+    userType: 'client',
   };
 
   componentDidMount() {
@@ -34,6 +38,12 @@ class Login extends React.Component {
 
   resetFocusedInput = () => {
     this.setState({focusedInput: null});
+  };
+
+  redirectToHomeScreen = async () => {
+    console.log(this.state.userType);
+    await AsyncStorage.setItem('@witzchatUserType', this.state.userType);
+    this.props.navigation.navigate('Main');
   };
 
   render() {
@@ -63,6 +73,13 @@ class Login extends React.Component {
               style={{
                 flex: 0.6,
               }}>
+              <View style={{marginTop: 20}}>
+                <ToggleButtons
+                  options={['client', 'provider']}
+                  value={this.state.userType}
+                  onPress={(value) => this.setState({userType: value})}
+                />
+              </View>
               <Form
                 style={{
                   paddingHorizontal: 20,
@@ -92,9 +109,7 @@ class Login extends React.Component {
                   style={{
                     marginTop: 20,
                   }}
-                  onPress={() => {
-                    this.props.navigation.navigate('Main');
-                  }}>
+                  onPress={this.redirectToHomeScreen}>
                   <Text>Log in</Text>
                 </Button>
               </Form>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, Image} from 'react-native';
+import {ScrollView, Image, StatusBar} from 'react-native';
 import {
   View,
   H3,
@@ -20,9 +20,10 @@ import {
   ListItem,
   Thumbnail,
   Badge,
+  Spinner,
 } from 'native-base';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-
+import AsyncStorage from '@react-native-community/async-storage';
 import ClientScreen from './clients';
 
 import colors from '../../constants/colors';
@@ -40,8 +41,30 @@ const Tabs = () => (
   </Tab.Navigator>
 );
 class Chats extends React.Component {
+  state = {
+    userType: 'client',
+    isLoading: true,
+  };
+  componentDidMount = async () => {
+    const userType = await AsyncStorage.getItem('@witzchatUserType');
+    if (userType && userType.length) {
+      this.setState({userType, isLoading: false});
+    }
+  };
   render() {
-    return (
+    const {userType, isLoading} = this.state;
+    return isLoading ? (
+      <Container>
+        <Header transparent androidStatusBarColor={colors.white} />
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+          }}>
+          <Spinner color={colors.primary} />
+        </View>
+      </Container>
+    ) : (
       <Container>
         <Header transparent androidStatusBarColor={colors.white}>
           <Left>
@@ -68,7 +91,8 @@ class Chats extends React.Component {
               <H3
                 style={{
                   marginBottom: 20,
-                }} heading>
+                }}
+                heading>
                 Chats
               </H3>
             </View>
@@ -76,7 +100,7 @@ class Chats extends React.Component {
               <Icon name="edit" type="FontAwesome5" primary />
             </View>
           </View>
-          <Tabs />
+          {userType === 'provider' ? <Tabs /> : <ClientScreen />}
         </Content>
       </Container>
     );
