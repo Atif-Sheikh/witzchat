@@ -100,7 +100,7 @@ class Chats extends React.Component {
               <Icon name="edit" type="FontAwesome5" primary />
             </View>
           </View>
-          {userType === 'provider' ? <Tabs /> : <ClientScreen />}
+          {userType === 'provider' ? <Tabs /> : <ClientScreen {...this.props} />}
         </Content>
       </Container>
     );
