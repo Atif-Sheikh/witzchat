@@ -21,6 +21,9 @@ import {
   Thumbnail,
   Badge,
 } from 'native-base';
+import {CommonActions} from '@react-navigation/native';
+import {connect} from 'react-redux';
+import {sendbirdLogout} from '../../actions';
 
 import SearchInput from '../../components/searchInput';
 import CallListItem from '../../components/callListItem';
@@ -28,6 +31,17 @@ import CallListItem from '../../components/callListItem';
 import colors from '../../constants/colors';
 
 class Settings extends React.Component {
+  onPressItem = (item) => {
+    if (item.name === 'Logout') {
+      this.props.sendbirdLogout();
+      const resetAction = CommonActions.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      });
+      this.props.navigation.dispatch(resetAction);
+    }
+  };
+
   render() {
     const listItems = [
       {
@@ -47,6 +61,9 @@ class Settings extends React.Component {
       },
       {
         name: 'Help',
+      },
+      {
+        name: 'Logout',
       },
     ];
     return (
@@ -101,7 +118,10 @@ class Settings extends React.Component {
               flex: 1,
             }}>
             {listItems.map((item, index) => (
-              <ListItem key={index} style={styles.listItem}>
+              <ListItem
+                key={index}
+                style={styles.listItem}
+                onPress={() => this.onPressItem(item)}>
                 <Body style={styles.settingsListItemBody}>
                   <Text style={styles.settingsText}>{item.name}</Text>
                 </Body>
@@ -117,7 +137,12 @@ class Settings extends React.Component {
   }
 }
 
-export default Settings;
+function mapStateToProps({menu}) {
+  const {isDisconnected} = menu;
+  return {isDisconnected};
+}
+
+export default connect(mapStateToProps, {sendbirdLogout})(Settings);
 
 const styles = StyleSheet.create({
   listItem: {

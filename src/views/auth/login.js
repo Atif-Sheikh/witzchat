@@ -14,6 +14,9 @@ import {
 } from 'native-base';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
+import {connect} from 'react-redux';
+
+import {initLogin, sendbirdLogin} from '../../actions';
 
 import images from '../../constants/images';
 import colors from '../../constants/colors';
@@ -30,6 +33,7 @@ class Login extends React.Component {
 
   componentDidMount() {
     SplashScreen.hide();
+    this.props.initLogin();
   }
 
   setFocusedInput = (input) => {
@@ -43,6 +47,13 @@ class Login extends React.Component {
   redirectToHomeScreen = async () => {
     console.log(this.state.userType);
     await AsyncStorage.setItem('@witzchatUserType', this.state.userType);
+    await this.props.sendbirdLogin({
+      userId: `AtifSheikh-${this.state.userType}`,
+      nickname:
+        this.state.userType === 'client'
+          ? 'AtifSheikhClient'
+          : 'AtifSheikhProvider',
+    });
     this.props.navigation.navigate('Main');
   };
 
@@ -135,4 +146,9 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+function mapStateToProps({login}) {
+  const {error, user} = login;
+  return {error, user};
+}
+
+export default connect(mapStateToProps, {initLogin, sendbirdLogin})(Login);

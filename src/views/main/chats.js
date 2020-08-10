@@ -23,10 +23,18 @@ import {
   Spinner,
 } from 'native-base';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {NavigationAction, CommonActions} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
+import {connect} from 'react-redux';
+import {sendbirdLogout, initMenu} from '../../actions';
+import {sbConnect} from '../../sendbirdActions';
+
 import ClientScreen from './clients';
+// import SendBird from 'sendbird';
 
 import colors from '../../constants/colors';
+
+// var sb = null;
 
 const Tab = createMaterialTopTabNavigator();
 const Tabs = () => (
@@ -46,11 +54,58 @@ class Chats extends React.Component {
     isLoading: true,
   };
   componentDidMount = async () => {
+    // sb = new SendBird({appId: '99ABD847-487B-424F-8C68-9D92B082B695'});
     const userType = await AsyncStorage.getItem('@witzchatUserType');
     if (userType && userType.length) {
       this.setState({userType, isLoading: false});
+      // sb.connect(`Atif-${userType}`, (user, error) => {
+      //   console.log(user, error);
+      //   if (user) {
+      //     this.getChannels();
+      //   }
+      // });
     }
   };
+
+  componentWillUnmount = () => {
+    // sb.disconnect(function () {
+    //   // A current user is discconected from Sendbird server.
+    // });
+  };
+
+  async componentDidUpdate(prevProps) {
+    // AsyncStorage.getItem('user', (err, result) => {
+    //   if (!result) {
+    //     this.setState({isLoading: false}, async () => {
+    //       const resetAction = CommonActions.reset({
+    //         index: 0,
+    //         routes: [
+    //           { name: 'Login' },
+    //         ],
+    //       });
+    //       await this.props.navigation.dispatch(resetAction);
+    //     });
+    //   }
+    // });
+  }
+
+  getChannels = () => {
+    var channelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+    channelListQuery.includeEmpty = true;
+    channelListQuery.order = 'latest_last_message'; // 'chronological', 'latest_last_message', 'channel_name_alphabetical', and 'metadata_value_alphabetical'
+    channelListQuery.limit = 15; // The value of pagination limit could be set up to 100.
+
+    if (channelListQuery.hasNext) {
+      channelListQuery.next(function (channelList, error) {
+        if (error) {
+          return;
+        }
+
+        console.log('channelList', channelList);
+      });
+    }
+  };
+
   render() {
     const {userType, isLoading} = this.state;
     return isLoading ? (
@@ -100,11 +155,20 @@ class Chats extends React.Component {
               <Icon name="edit" type="FontAwesome5" primary />
             </View>
           </View>
-          {userType === 'provider' ? <Tabs /> : <ClientScreen {...this.props} />}
+          {userType === 'provider' ? (
+            <Tabs />
+          ) : (
+            <ClientScreen {...this.props} />
+          )}
         </Content>
       </Container>
     );
   }
 }
 
-export default Chats;
+function mapStateToProps({menu}) {
+  const {isDisconnected} = menu;
+  return {isDisconnected};
+}
+
+export default connect(mapStateToProps, {sendbirdLogout, initMenu})(Chats);

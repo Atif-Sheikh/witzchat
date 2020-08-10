@@ -9,6 +9,8 @@
 import React from 'react';
 
 import {StyleProvider, Icon} from 'native-base';
+import {Provider} from 'react-redux';
+
 import getTheme from './native-base-theme/components';
 import material from './native-base-theme/variables/material';
 
@@ -23,6 +25,8 @@ import Calls from './src/views/main/calls';
 import Chats from './src/views/main/chats';
 import Settings from './src/views/main/settings';
 import ChatScreen from './src/views/main/chat';
+
+import store from './src/store';
 
 import {StatusBar} from 'react-native';
 
@@ -79,52 +83,54 @@ const TabNavigatoins = () => (
 
 const App = () => {
   return (
-    <StyleProvider style={getTheme(material)}>
-      <>
-        <StatusBar backgroundColor={colors.white} />
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-              cardStyle: {backgroundColor: 'transparent'},
-              cardOverlayEnabled: true,
-              cardStyleInterpolator: slideAnimation,
-            }}
-            mode="modal">
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen
-              name="ForgotPassword"
-              component={ForgotPassword}
-              options={{
+    <Provider store={store}>
+      <StyleProvider style={getTheme(material)}>
+        <>
+          <StatusBar backgroundColor={colors.white} />
+          <NavigationContainer>
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
                 cardStyle: {backgroundColor: 'transparent'},
                 cardOverlayEnabled: true,
-                cardStyleInterpolator: ({current: {progress}}) => ({
-                  cardStyle: {
-                    opacity: progress.interpolate({
-                      inputRange: [0, 0.5, 0.9, 1],
-                      outputRange: [0, 0.25, 0.7, 1],
-                    }),
-                  },
-                  overlayStyle: {
-                    opacity: progress.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, 0.5],
-                      extrapolate: 'clamp',
-                    }),
-                  },
-                }),
+                cardStyleInterpolator: slideAnimation,
               }}
-            />
-            <Stack.Screen
-              name="TermsAndConditions"
-              component={TermsAndConditions}
-            />
-            <Stack.Screen name="Main" component={TabNavigatoins} />
-            <Stack.Screen name="ChatScreen" component={ChatScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </>
-    </StyleProvider>
+              mode="modal">
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen
+                name="ForgotPassword"
+                component={ForgotPassword}
+                options={{
+                  cardStyle: {backgroundColor: 'transparent'},
+                  cardOverlayEnabled: true,
+                  cardStyleInterpolator: ({current: {progress}}) => ({
+                    cardStyle: {
+                      opacity: progress.interpolate({
+                        inputRange: [0, 0.5, 0.9, 1],
+                        outputRange: [0, 0.25, 0.7, 1],
+                      }),
+                    },
+                    overlayStyle: {
+                      opacity: progress.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, 0.5],
+                        extrapolate: 'clamp',
+                      }),
+                    },
+                  }),
+                }}
+              />
+              <Stack.Screen
+                name="TermsAndConditions"
+                component={TermsAndConditions}
+              />
+              <Stack.Screen name="Main" component={TabNavigatoins} />
+              <Stack.Screen name="ChatScreen" component={ChatScreen} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </>
+      </StyleProvider>
+    </Provider>
   );
 };
 

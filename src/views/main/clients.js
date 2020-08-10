@@ -1,5 +1,23 @@
 import React from 'react';
 import {ScrollView, View} from 'react-native';
+
+import {connect} from 'react-redux';
+import {
+  initGroupChannel,
+  groupChannelProgress,
+  getGroupChannelList,
+  onGroupChannelPress,
+  onLeaveChannelPress,
+  onHideChannelPress,
+  clearSelectedGroupChannel,
+  createGroupChannelListHandler,
+} from '../../actions';
+import {
+  sbCreateGroupChannelListQuery,
+  sbUnixTimestampToDate,
+  sbGetChannelTitle,
+} from '../../sendbirdActions';
+
 import SearchInput from '../../components/searchInput';
 import ChatListItem from '../../components/chatListItem';
 
@@ -67,9 +85,32 @@ class ClientScreen extends React.Component {
         unreadMsgCount: 0,
       },
     ],
+    joinChannel: false,
+    groupChannelListQuery: null,
   };
+
+  componentDidMount() {
+    this.props.initGroupChannel();
+    this.props.createGroupChannelListHandler();
+    this._getGroupChannelList(true);
+  }
+
+  _getGroupChannelList = init => {
+    this.props.groupChannelProgress(true);
+    if (init) {
+      const groupChannelListQuery = sbCreateGroupChannelListQuery();
+      this.setState({ groupChannelListQuery }, () => {
+        this.props.getGroupChannelList(this.state.groupChannelListQuery);
+      });
+    } else {
+      this.props.getGroupChannelList(this.state.groupChannelListQuery);
+    }
+  };
+
+
   render() {
     const {chats} = this.state;
+    console.log(this.props.list);
     return (
       <View style={{backgroundColor: colors.white}}>
         <SearchInput />
@@ -96,4 +137,21 @@ class ClientScreen extends React.Component {
   }
 }
 
-export default ClientScreen;
+function mapStateToProps({ groupChannel }) {
+  const { isLoading, list, channel } = groupChannel;
+  return { isLoading, list, channel };
+}
+
+export default connect(
+  mapStateToProps,
+  {
+    initGroupChannel,
+    groupChannelProgress,
+    getGroupChannelList,
+    onGroupChannelPress,
+    onLeaveChannelPress,
+    onHideChannelPress,
+    clearSelectedGroupChannel,
+    createGroupChannelListHandler
+  }
+)(ClientScreen);

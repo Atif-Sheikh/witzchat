@@ -14,10 +14,14 @@ import {
   Content,
   Text,
 } from 'native-base';
+import SendBird from 'sendbird';
 
 import ChatBubble from '../../components/chatBubble';
 
 import colors from '../../constants/colors';
+
+var sb = null;
+var groupChannel = null;
 
 class Chat extends React.Component {
   state = {
@@ -74,6 +78,72 @@ class Chat extends React.Component {
   goBack = () => {
     this.props.navigation.goBack();
   };
+
+  componentDidMount = () => {
+    sb = new SendBird({appId: '99ABD847-487B-424F-8C68-9D92B082B695'});
+    var userIds = ['Atif-client', 'Atif-provider'];
+    // When 'distinct' is false
+    sb.GroupChannel.createChannelWithUserIds(userIds, false, (gc, error) => {
+      if (error) {
+        return;
+      }
+      groupChannel = gc;
+      console.log(gc);
+      this.createChannelHandler();
+      this.getPreviousMessages();
+    });
+  };
+
+  componentWillUnmount = () => {
+    sb.removeChannelHandler(groupChannel.url);
+  };
+
+  getPreviousMessages = () => {
+    // There should only be one single instance per channel view.
+    var prevMessageListQuery = groupChannel.createPreviousMessageListQuery();
+    // prevMessageListQuery.limit = 100;
+    // prevMessageListQuery.reverse = true;
+    // prevMessageListQuery.includeMetaArray = true; // Retrieve a list of messages along with their metaarrays.
+    // prevMessageListQuery.includeReaction = true; // Retrieve a list of messages along with their reactions.
+
+    // Retrieving previous messages.
+    prevMessageListQuery.load(function (messages, error) {
+      if (error) {
+        return;
+      }
+
+      console.log(messages);
+    });
+  };
+
+  createChannelHandler = () => {
+    var ChannelHandler = new sb.ChannelHandler();
+    ChannelHandler.onMessageReceived = (channel, message) => {
+      console.log('onMessageReceived');
+      console.log(channel, message);
+    };
+    sb.addChannelHandler(groupChannel.url, ChannelHandler);
+  };
+
+  sendMessage = () => {
+    const params = new sb.UserMessageParams();
+
+    params.message = 'Testing';
+    params.pushNotificationDeliveryOption = 'default'; // Either 'default' or 'suppress'
+    params.mentionType = 'channel';
+    params.mentionedUserIds = groupChannel.members.map(
+      (member) => member.userId,
+    );
+
+    console.log("SENDING MESSAGE ", params)
+    groupChannel.sendUserMessage(params, function (message, error) {
+      if (error) {
+        return;
+      }
+
+      console.log(message);
+    });
+  };
   render() {
     const {messages} = this.state;
     return (
@@ -129,6 +199,9 @@ class Chat extends React.Component {
             {messages.map((item, index) => (
               <ChatBubble {...item} key={index} />
             ))}
+            <Button onPress={this.sendMessage}>
+              <Text>Testing</Text>
+            </Button>
           </ScrollView>
         </Content>
       </Container>
