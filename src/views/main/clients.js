@@ -1,5 +1,7 @@
 import React from 'react';
 import {ScrollView, View} from 'react-native';
+import {Spinner} from 'native-base';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import {connect} from 'react-redux';
 import {
@@ -88,9 +90,15 @@ class ClientScreen extends React.Component {
     ],
     joinChannel: false,
     groupChannelListQuery: null,
+    userType: 'client',
+    isLoading: true,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const userType = await AsyncStorage.getItem('@witzchatUserType');
+    if (userType && userType.length) {
+      this.setState({userType, isLoading: false});
+    }
     this.props.initGroupChannel();
     this.props.createGroupChannelListHandler();
     this._getGroupChannelList(true);
@@ -114,9 +122,31 @@ class ClientScreen extends React.Component {
   };
 
   render() {
-    const {chats} = this.state;
-    console.log(this.props.list);
-    return (
+    const {chats, isLoading, userType} = this.state;
+
+    const getChannelName = (item) => {
+      if (item) {
+        if (userType === 'client') {
+          return item.inviter.nickname;
+        }
+        for (const member of item.members) {
+          if(member.userId !== item.inviter.userId){
+            return member.nickname;
+          }
+        }
+      }
+      return '';
+    };
+
+    return isLoading ? (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+        }}>
+        <Spinner color={colors.primary} />
+      </View>
+    ) : (
       <View style={{backgroundColor: colors.white}}>
         <SearchInput />
         <ScrollView
@@ -129,7 +159,7 @@ class ClientScreen extends React.Component {
               imageUrl={
                 'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4'
               }
-              name={item.name}
+              name={getChannelName(item)}
               recentMsg={item.lastMessage ? item.lastMessage : ''}
               time={'08:09am'}
               unreadMsgCount={0}
@@ -144,9 +174,9 @@ class ClientScreen extends React.Component {
   }
 }
 
-function mapStateToProps({groupChannel}) {
+function mapStateToProps({groupChannel, userInfo, user}) {
   const {isLoading, list, channel} = groupChannel;
-  return {isLoading, list, channel};
+  return {isLoading, list, channel, userInfo, user};
 }
 
 export default connect(mapStateToProps, {
