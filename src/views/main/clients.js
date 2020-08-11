@@ -11,6 +11,7 @@ import {
   onHideChannelPress,
   clearSelectedGroupChannel,
   createGroupChannelListHandler,
+  createGroupChannel,
 } from '../../actions';
 import {
   sbCreateGroupChannelListQuery,
@@ -95,11 +96,12 @@ class ClientScreen extends React.Component {
     this._getGroupChannelList(true);
   }
 
-  _getGroupChannelList = init => {
+  _getGroupChannelList = (init) => {
     this.props.groupChannelProgress(true);
     if (init) {
       const groupChannelListQuery = sbCreateGroupChannelListQuery();
-      this.setState({ groupChannelListQuery }, () => {
+      groupChannelListQuery.includeEmpty = true;
+      this.setState({groupChannelListQuery}, () => {
         this.props.getGroupChannelList(this.state.groupChannelListQuery);
       });
     } else {
@@ -107,6 +109,9 @@ class ClientScreen extends React.Component {
     }
   };
 
+  navigateToChat = () => {
+    this.props.navigation.navigate('ChatScreen');
+  };
 
   render() {
     const {chats} = this.state;
@@ -118,17 +123,19 @@ class ClientScreen extends React.Component {
           style={{
             paddingVertical: 10,
           }}>
-          {chats.map((item, index) => (
+          {this.props.list.map((item, index) => (
             <ChatListItem
               key={index}
-              imageUrl={item.imageUrl}
+              imageUrl={
+                'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4'
+              }
               name={item.name}
-              recentMsg={item.recentMsg}
-              time={item.recentMsgTime}
-              unreadMsgCount={item.unreadMsgCount}
-              showDoubleTick={item.showDoubleTick}
-              showSingleTick={item.showSingleTick}
-              onPressChat={() => this.props.navigation.navigate('ChatScreen')}
+              recentMsg={item.lastMessage ? item.lastMessage : ''}
+              time={'08:09am'}
+              unreadMsgCount={0}
+              showDoubleTick={false}
+              showSingleTick={false}
+              onPressChat={this.navigateToChat}
             />
           ))}
         </ScrollView>
@@ -137,21 +144,19 @@ class ClientScreen extends React.Component {
   }
 }
 
-function mapStateToProps({ groupChannel }) {
-  const { isLoading, list, channel } = groupChannel;
-  return { isLoading, list, channel };
+function mapStateToProps({groupChannel}) {
+  const {isLoading, list, channel} = groupChannel;
+  return {isLoading, list, channel};
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    initGroupChannel,
-    groupChannelProgress,
-    getGroupChannelList,
-    onGroupChannelPress,
-    onLeaveChannelPress,
-    onHideChannelPress,
-    clearSelectedGroupChannel,
-    createGroupChannelListHandler
-  }
-)(ClientScreen);
+export default connect(mapStateToProps, {
+  initGroupChannel,
+  groupChannelProgress,
+  getGroupChannelList,
+  onGroupChannelPress,
+  onLeaveChannelPress,
+  onHideChannelPress,
+  clearSelectedGroupChannel,
+  createGroupChannelListHandler,
+  createGroupChannel,
+})(ClientScreen);

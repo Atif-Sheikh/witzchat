@@ -71,6 +71,7 @@ export const createGroupChannel = (inviteUserIdList, isDistinct) => {
   return dispatch => {
     return sbCreateGroupChannel(inviteUserIdList, isDistinct)
       .then(channel => {
+        console.log('Channel', channel);
         dispatch({
           type: CREATE_GROUP_CHANNEL_SUCCESS,
           channel: channel

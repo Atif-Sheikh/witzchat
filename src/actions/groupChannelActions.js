@@ -31,11 +31,13 @@ export const getGroupChannelList = groupChannelListQuery => {
   return dispatch => {
     if (groupChannelListQuery && groupChannelListQuery.hasNext) {
       return sbGetGroupChannelList(groupChannelListQuery)
-        .then(channels =>
-          dispatch({
+        .then(channels =>{
+          console.log('testing',channels);
+         return dispatch({
             type: GROUP_CHANNEL_LIST_SUCCESS,
             list: channels
           })
+        }
         )
         .catch(error => dispatch({ type: GROUP_CHANNEL_LIST_FAIL }));
     } else {
