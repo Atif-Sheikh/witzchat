@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
+import {ScrollView, FlatList} from 'react-native';
 import {
   Container,
   Header,
@@ -13,8 +13,37 @@ import {
   View,
   Content,
   Text,
+  Input,
+  Item,
+  Label,
 } from 'native-base';
 // import SendBird from 'sendbird';
+import {connect} from 'react-redux';
+import {
+  openChannelProgress,
+  groupChannelProgress,
+  initChatScreen,
+  getChannelTitle,
+  createChatHandler,
+  onSendButtonPress,
+  getPrevMessageList,
+  onUserBlockPress,
+  onMessageDelete,
+  onFileButtonPress,
+  typingStart,
+  onUserMessageCopy,
+  onUserUpdateMessage,
+  clearMessageSelection,
+  typingEnd,
+  channelExit,
+} from '../../actions';
+import {
+  sbGetGroupChannel,
+  sbGetOpenChannel,
+  sbCreatePreviousMessageListQuery,
+  sbAdjustMessageList,
+  sbMarkAsRead,
+} from '../../sendbirdActions';
 
 import ChatBubble from '../../components/chatBubble';
 
@@ -25,55 +54,10 @@ import colors from '../../constants/colors';
 
 class Chat extends React.Component {
   state = {
-    messages: [
-      {
-        msg: 'Good morning Mr Tan! How are you feeling today?',
-        time: '10:39am',
-      },
-      {
-        msg: 'Morning Dr T, I’m doing fine thank you!',
-        time: '10:41am',
-        sentByUser: true,
-        showDoubleTick: true,
-        showSingleTick: true,
-      },
-      {
-        msg:
-          'That’s great to hear! In that case, we will continue with scheduled appointment which will be happening this afternoon 3pm.',
-        time: '10:45am',
-      },
-      {
-        msg:
-          'Please remember to bring your documents along with your identity card ',
-        time: '10:47am',
-      },
-      {
-        msg: 'Okay noted! Have already prepared them all in my bag.',
-        time: '12:55pm',
-        sentByUser: true,
-        showDoubleTick: true,
-        showSingleTick: true,
-      },
-      {
-        msg: 'May I check if my blood test results are back?',
-        time: '12:55pm',
-        sentByUser: true,
-        showDoubleTick: true,
-        showSingleTick: true,
-      },
-      {
-        msg:
-          'Your blood test results will take about 1 week for it to be sent back, after which we can arrange for another appt for a review.',
-        time: '12:58am',
-      },
-      {
-        msg: 'I see, great! Thanks for the heads up Dr T!',
-        time: '01:01am',
-        sentByUser: true,
-        showDoubleTick: true,
-        showSingleTick: true,
-      },
-    ],
+    channel: null,
+    isLoading: false,
+    previousMessageListQuery: null,
+    textMessage: '',
   };
   goBack = () => {
     this.props.navigation.goBack();
@@ -92,60 +76,98 @@ class Chat extends React.Component {
     //   this.createChannelHandler();
     //   this.getPreviousMessages();
     // });
+    this._init();
   };
 
-  componentWillUnmount = () => {
-    // sb.removeChannelHandler(groupChannel.url);
+  _init = () => {
+    this.props.initChatScreen();
+    const {channelUrl, isOpenChannel} = this.props.route.params;
+    console.log(channelUrl, isOpenChannel);
+    if (isOpenChannel) {
+      sbGetOpenChannel(channelUrl).then((channel) =>
+        this.setState({channel}, () => this._componentInit()),
+      );
+    } else {
+      sbGetGroupChannel(channelUrl).then((channel) =>
+        this.setState({channel}, () => this._componentInit()),
+      );
+    }
   };
 
-  getPreviousMessages = () => {
-    // There should only be one single instance per channel view.
-    // var prevMessageListQuery = groupChannel.createPreviousMessageListQuery();
-    // // prevMessageListQuery.limit = 100;
-    // // prevMessageListQuery.reverse = true;
-    // // prevMessageListQuery.includeMetaArray = true; // Retrieve a list of messages along with their metaarrays.
-    // // prevMessageListQuery.includeReaction = true; // Retrieve a list of messages along with their reactions.
-
-    // // Retrieving previous messages.
-    // prevMessageListQuery.load(function (messages, error) {
-    //   if (error) {
-    //     return;
-    //   }
-
-    //   console.log(messages);
-    // });
+  _componentInit = () => {
+    const {channelUrl, isOpenChannel} = this.props.route.params;
+    this.props.openChannelProgress(false);
+    this.props.groupChannelProgress(false);
+    this.props.getChannelTitle(channelUrl, isOpenChannel);
+    this.props.createChatHandler(channelUrl, isOpenChannel);
+    this._getMessageList(true);
+    if (!isOpenChannel) {
+      sbMarkAsRead({channelUrl});
+    }
   };
 
-  createChannelHandler = () => {
-    // var ChannelHandler = new sb.ChannelHandler();
-    // ChannelHandler.onMessageReceived = (channel, message) => {
-    //   console.log('onMessageReceived');
-    //   console.log(channel, message);
-    // };
-    // sb.addChannelHandler(groupChannel.url, ChannelHandler);
+  _getMessageList = (init) => {
+    if (!this.state.previousMessageListQuery && !init) {
+      return;
+    }
+    const {channelUrl, isOpenChannel} = this.props.route.params;
+    this.setState({isLoading: true}, () => {
+      if (init) {
+        sbCreatePreviousMessageListQuery(channelUrl, isOpenChannel)
+          .then((previousMessageListQuery) => {
+            this.setState({previousMessageListQuery}, () => {
+              this.props.getPrevMessageList(
+                this.state.previousMessageListQuery,
+              );
+            });
+          })
+          .catch((error) => this.props.navigation.goBack());
+      } else {
+        this.props.getPrevMessageList(this.state.previousMessageListQuery);
+      }
+    });
   };
 
-  sendMessage = () => {
-    // const params = new sb.UserMessageParams();
-
-    // params.message = 'Testing';
-    // params.pushNotificationDeliveryOption = 'default'; // Either 'default' or 'suppress'
-    // params.mentionType = 'channel';
-    // params.mentionedUserIds = groupChannel.members.map(
-    //   (member) => member.userId,
-    // );
-
-    // console.log("SENDING MESSAGE ", params)
-    // groupChannel.sendUserMessage(params, function (message, error) {
-    //   if (error) {
-    //     return;
-    //   }
-
-    //   console.log(message);
-    // });
+  _onSendButtonPress = () => {
+    if (this.state.textMessage) {
+      const {channelUrl, isOpenChannel} = this.props.route.params;
+      const {textMessage} = this.state;
+      this.setState({textMessage: ''}, () => {
+        this.props.onSendButtonPress(channelUrl, isOpenChannel, textMessage);
+        if (this.props && this.props.list && this.props.list.length > 0) {
+          this.flatList.scrollToIndex({
+            index: 0,
+            viewOffset: 0,
+          });
+        }
+      });
+    }
   };
+
+  _renderList = (rowData) => {
+    const item = rowData.item;
+    const {channel} = this.state;
+    if (!channel) {
+      return null;
+    }
+    return (
+      <ChatBubble
+        key={item.messageId ? item.messageId : item.reqId}
+        msg={item.message}
+        time={item.time}
+        sentByUser={item.isUser}
+        showDoubleTick={item.isUser ? !channel.getReadReceipt(item) : 0}
+        showSingleTick={item.isUser}
+      />
+    );
+  };
+
+  _onTextMessageChanged = (textMessage) => {
+    this.setState({textMessage});
+  };
+
   render() {
-    const {messages} = this.state;
+    const {title} = this.props.route.params;
     return (
       <Container>
         <Header transparent androidStatusBarColor={colors.white}>
@@ -171,7 +193,7 @@ class Chat extends React.Component {
                 }}
               />
               <Title heading style={{marginLeft: 10}}>
-                Dr Anita T.
+                {title}
               </Title>
             </View>
           </Body>
@@ -184,29 +206,88 @@ class Chat extends React.Component {
             </Button>
           </Right>
         </Header>
-        <Content
-          contentContainerStyle={{
+        <View
+          style={{
             flex: 1,
             backgroundColor: '#ccc',
           }}>
-          <ScrollView
-            contentContainerStyle={{
+          <View
+            style={{
               paddingHorizontal: 20,
+              flex: 1,
             }}>
-            <Text style={{alignSelf: 'center'}} dark>
-              Tue, 14 Jul
-            </Text>
-            {messages.map((item, index) => (
-              <ChatBubble {...item} key={index} />
-            ))}
-            <Button onPress={this.sendMessage}>
-              <Text>Testing</Text>
+            <FlatList
+              inverted={true}
+              ref={(elem) => (this.flatList = elem)}
+              renderItem={this._renderList}
+              data={this.props.list}
+              extraData={this.state}
+              keyExtractor={(item, index) => item.messageId + ''}
+              onEndReached={() => this._getMessageList(false)}
+              onEndReachedThreshold={0}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              paddingVertical: 10,
+              backgroundColor: '#e2e2e2',
+            }}>
+            <Button transparent>
+              <Icon name="plus" type="FontAwesome5" />
             </Button>
-          </ScrollView>
-        </Content>
+            <Input
+              style={{
+                backgroundColor: colors.white,
+                borderRadius: 100,
+                marginHorizontal: 10,
+                height: 40,
+                paddingLeft: 20,
+              }}
+              value={this.state.textMessage}
+              onChangeText={this._onTextMessageChanged}
+              returnKeyType={'send'}
+              blurOnSubmit={false}
+              onSubmitEditing={this._onSendButtonPress}
+            />
+            <Button transparent>
+              <Icon name="camera" type="FontAwesome5" />
+            </Button>
+            <Button transparent>
+              <Icon name="microphone" type="FontAwesome5" />
+            </Button>
+          </View>
+        </View>
       </Container>
     );
   }
 }
 
-export default Chat;
+// export default Chat;
+
+function mapStateToProps({chat}) {
+  let {title, memberCount, list, exit, typing, selectedMessages} = chat;
+
+  list = sbAdjustMessageList(list);
+  return {title, memberCount, list, exit, typing, selectedMessages};
+}
+
+export default connect(mapStateToProps, {
+  openChannelProgress,
+  groupChannelProgress,
+  initChatScreen,
+  getChannelTitle,
+  createChatHandler,
+  onSendButtonPress,
+  getPrevMessageList,
+  onUserUpdateMessage,
+  onUserBlockPress,
+  onFileButtonPress,
+  onUserMessageCopy,
+  clearMessageSelection,
+  typingStart,
+  typingEnd,
+  onMessageDelete,
+  channelExit,
+})(Chat);

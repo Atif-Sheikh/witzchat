@@ -28,66 +28,6 @@ import colors from '../../constants/colors';
 
 class ClientScreen extends React.Component {
   state = {
-    chats: [
-      {
-        imageUrl:
-          'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
-        name: 'Dr Anita T.',
-        recentMsg: 'Good day sir! Your appointment',
-        recentMsgTime: '12:55pm',
-        unreadMsgCount: 2,
-      },
-      {
-        imageUrl:
-          'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
-        name: 'Dr James A.',
-        recentMsg: 'Yes.',
-        recentMsgTime: '08:32am',
-        unreadMsgCount: 0,
-      },
-      {
-        imageUrl:
-          'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
-        name: 'Dr. Clarence W.',
-        recentMsg: 'Would you like to make appointment',
-        recentMsgTime: '08:09am',
-        unreadMsgCount: 0,
-      },
-      {
-        imageUrl:
-          'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
-        name: 'Dr. Emily C.',
-        recentMsg: 'Thank you Dr Emily!',
-        recentMsgTime: 'yesterday',
-        unreadMsgCount: 0,
-        showDoubleTick: true,
-      },
-      {
-        imageUrl:
-          'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
-        name: 'Dr Gwen K.',
-        recentMsg: 'See you for your next appoitment',
-        recentMsgTime: '17/7/2020',
-        unreadMsgCount: 0,
-        showSingleTick: true,
-      },
-      {
-        imageUrl:
-          'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
-        name: 'Dr Gwen K.',
-        recentMsg: 'See you for your next appoitment',
-        recentMsgTime: '17/7/2020',
-        unreadMsgCount: 0,
-      },
-      {
-        imageUrl:
-          'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
-        name: 'Dr Lincoln P.',
-        recentMsg: 'That’s great!',
-        recentMsgTime: '12/7/2020',
-        unreadMsgCount: 0,
-      },
-    ],
     joinChannel: false,
     groupChannelListQuery: null,
     userType: 'client',
@@ -117,26 +57,43 @@ class ClientScreen extends React.Component {
     }
   };
 
-  navigateToChat = () => {
-    this.props.navigation.navigate('ChatScreen');
+  navigateToChat = (channel) => {
+    if (channel) {
+      const data = {
+        channelUrl: channel.url,
+        title: this.getChannelName(channel),
+        memberCount: channel.memberCount,
+        isOpenChannel: channel.isOpenChannel(),
+        _initListState: this._initJoinState,
+      };
+      console.log(data);
+      this.props.clearSelectedGroupChannel();
+      this.props.navigation.navigate('ChatScreen', data);
+    }
+    // this.props.navigation.navigate('ChatScreen');
+  };
+
+  _initJoinState = () => {
+    this.setState({joinChannel: false});
+  };
+
+  getChannelName = (item) => {
+    const {userType} = this.state;
+    if (item) {
+      if (userType === 'client') {
+        return item.inviter.nickname;
+      }
+      for (const member of item.members) {
+        if (member.userId !== item.inviter.userId) {
+          return member.nickname;
+        }
+      }
+    }
+    return '';
   };
 
   render() {
-    const {chats, isLoading, userType} = this.state;
-
-    const getChannelName = (item) => {
-      if (item) {
-        if (userType === 'client') {
-          return item.inviter.nickname;
-        }
-        for (const member of item.members) {
-          if(member.userId !== item.inviter.userId){
-            return member.nickname;
-          }
-        }
-      }
-      return '';
-    };
+    const {isLoading, userType} = this.state;
 
     return isLoading ? (
       <View
@@ -159,13 +116,13 @@ class ClientScreen extends React.Component {
               imageUrl={
                 'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4'
               }
-              name={getChannelName(item)}
-              recentMsg={item.lastMessage ? item.lastMessage : ''}
+              name={this.getChannelName(item)}
+              recentMsg={item.lastMessage ? item.lastMessage.message : ''}
               time={'08:09am'}
               unreadMsgCount={0}
               showDoubleTick={false}
               showSingleTick={false}
-              onPressChat={this.navigateToChat}
+              onPressChat={() => this.navigateToChat(item)}
             />
           ))}
         </ScrollView>
