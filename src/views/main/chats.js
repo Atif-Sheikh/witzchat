@@ -4,22 +4,14 @@ import {
   View,
   H3,
   Text,
-  Form,
-  Item,
-  Input,
-  Label,
   Button,
   Icon,
   Content,
   Container,
   Header,
   Left,
-  Title,
   Body,
   Right,
-  ListItem,
-  Thumbnail,
-  Badge,
   Spinner,
 } from 'native-base';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -54,40 +46,11 @@ class Chats extends React.Component {
     isLoading: true,
   };
   componentDidMount = async () => {
-    // sb = new SendBird({appId: '99ABD847-487B-424F-8C68-9D92B082B695'});
     const userType = await AsyncStorage.getItem('@witzchatUserType');
     if (userType && userType.length) {
       this.setState({userType, isLoading: false});
-      // sb.connect(`Atif-${userType}`, (user, error) => {
-      //   console.log(user, error);
-      //   if (user) {
-      //     this.getChannels();
-      //   }
-      // });
     }
   };
-
-  componentWillUnmount = () => {
-    // sb.disconnect(function () {
-    //   // A current user is discconected from Sendbird server.
-    // });
-  };
-
-  async componentDidUpdate(prevProps) {
-    // AsyncStorage.getItem('user', (err, result) => {
-    //   if (!result) {
-    //     this.setState({isLoading: false}, async () => {
-    //       const resetAction = CommonActions.reset({
-    //         index: 0,
-    //         routes: [
-    //           { name: 'Login' },
-    //         ],
-    //       });
-    //       await this.props.navigation.dispatch(resetAction);
-    //     });
-    //   }
-    // });
-  }
 
   getChannels = () => {
     var channelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
