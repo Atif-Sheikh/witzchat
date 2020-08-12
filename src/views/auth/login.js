@@ -29,8 +29,8 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: 'kfraczek1@usda.gov',
-      password: 'P@ssword1',
+      email: '',
+      password: '',
       focusedInput: null,
       userType: 'client',
       isSubmiting: false,
@@ -64,21 +64,23 @@ class Login extends React.Component {
   };
 
   login = () => {
-    this.setState({isSubmiting: true});
-    ParseApi.User.logIn(this.state.email, this.state.password)
-      .then(async (user) => {
-        console.log('Logged in user', user);
-        await AsyncStorage.setItem('@witzUser', user);
-        await this.props.sendbirdLogin({
-          userId: user.objectId,
-          nickname: user.username,
+    if (!this.state.isSubmiting) {
+      this.setState({isSubmiting: true});
+      ParseApi.User.logIn(this.state.email, this.state.password)
+        .then(async (user) => {
+          console.log('Logged in user', user);
+          await AsyncStorage.setItem('@witzUser', user);
+          await this.props.sendbirdLogin({
+            userId: user.objectId,
+            nickname: user.username,
+          });
+          this.setState({isSubmiting: false});
+        })
+        .catch((error) => {
+          this.setState({isSubmiting: false});
+          console.error('Error while logging in user', error);
         });
-        this.setState({isSubmiting: false});
-      })
-      .catch((error) => {
-        this.setState({isSubmiting: false});
-        console.error('Error while logging in user', error);
-      });
+    }
   };
 
   render() {
@@ -142,9 +144,8 @@ class Login extends React.Component {
                   <Icon name="lock" type={'SimpleLineIcons'} />
                   <Label>Password</Label>
                   <Input
-                    value={this.state.password}
                     secureTextEntry={true}
-                    keyboardType={'visible-password'}
+                    value={this.state.password}
                     onFocus={() => this.setFocusedInput('password')}
                     onBlur={this.resetFocusedInput}
                     onSubmitEditing={this.login}
