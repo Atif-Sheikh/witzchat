@@ -11,11 +11,13 @@ import {
   Input,
   Label,
   Icon,
+  Spinner,
 } from 'native-base';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 
+import ParseApi from '../../utils/parse';
 import {initLogin, sendbirdLogin} from '../../actions';
 
 import images from '../../constants/images';
@@ -24,11 +26,22 @@ import colors from '../../constants/colors';
 import ToggleButtons from '../../components/toggleButtons';
 
 class Login extends React.Component {
-  state = {
-    email: '',
-    password: '',
-    focusedInput: null,
-    userType: 'client',
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: 'kfraczek1@usda.gov',
+      password: 'P@ssword1',
+      focusedInput: null,
+      userType: 'client',
+      isSubmiting: false,
+    };
+    this.inputs = {};
+  }
+
+  focusNextField = (id) => {
+    if (this.inputs && this.inputs[id]) {
+      this.inputs[id]._root.focus();
+    }
   };
 
   componentDidMount() {
@@ -45,16 +58,27 @@ class Login extends React.Component {
   };
 
   redirectToHomeScreen = async () => {
-    console.log(this.state.userType);
     await AsyncStorage.setItem('@witzchatUserType', this.state.userType);
-    await this.props.sendbirdLogin({
-      userId: `AtifSheikh-${this.state.userType}`,
-      nickname:
-        this.state.userType === 'client'
-          ? 'AtifSheikhClient'
-          : 'AtifSheikhProvider',
-    });
+
     this.props.navigation.navigate('Main');
+  };
+
+  login = () => {
+    this.setState({isSubmiting: true});
+    ParseApi.User.logIn(this.state.email, this.state.password)
+      .then(async (user) => {
+        console.log('Logged in user', user);
+        await AsyncStorage.setItem('@witzUser', user);
+        await this.props.sendbirdLogin({
+          userId: user.objectId,
+          nickname: user.username,
+        });
+        this.setState({isSubmiting: false});
+      })
+      .catch((error) => {
+        this.setState({isSubmiting: false});
+        console.error('Error while logging in user', error);
+      });
   };
 
   render() {
@@ -100,19 +124,33 @@ class Login extends React.Component {
                   <Icon name="user-o" type={'FontAwesome'} />
                   <Label>Username</Label>
                   <Input
+                    value={this.state.email}
                     style={{
                       color: colors.primary,
                     }}
                     onFocus={() => this.setFocusedInput('username')}
                     onBlur={this.resetFocusedInput}
+                    blurOnSubmit={false}
+                    onSubmitEditing={() => this.focusNextField('two')}
+                    returnKeyType={'next'}
+                    getRef={(input) => (this.inputs['one'] = input)}
+                    autoCapitalize={'none'}
+                    onChangeText={(email) => this.setState({email})}
                   />
                 </Item>
-                <Item floatingLabel error={focusedInput === 'password'}>
+                <Item floatingLabel active={focusedInput === 'password'}>
                   <Icon name="lock" type={'SimpleLineIcons'} />
                   <Label>Password</Label>
                   <Input
+                    value={this.state.password}
+                    secureTextEntry={true}
+                    keyboardType={'visible-password'}
                     onFocus={() => this.setFocusedInput('password')}
                     onBlur={this.resetFocusedInput}
+                    onSubmitEditing={this.login}
+                    returnKeyType={'done'}
+                    getRef={(input) => (this.inputs['two'] = input)}
+                    onChangeText={(password) => this.setState({password})}
                   />
                 </Item>
                 <Button
@@ -120,8 +158,13 @@ class Login extends React.Component {
                   style={{
                     marginTop: 20,
                   }}
-                  onPress={this.redirectToHomeScreen}>
-                  <Text>Log in</Text>
+                  onPress={this.login}
+                  disabled={this.state.isSubmiting}>
+                  {this.state.isSubmiting ? (
+                    <Spinner color={colors.white} />
+                  ) : (
+                    <Text>Log in</Text>
+                  )}
                 </Button>
               </Form>
             </View>
