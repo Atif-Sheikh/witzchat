@@ -24,13 +24,26 @@ import {
 import {CommonActions} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import {sendbirdLogout} from '../../actions';
+import AsyncStorage from '@react-native-community/async-storage';
 
-import SearchInput from '../../components/searchInput';
-import CallListItem from '../../components/callListItem';
 
 import colors from '../../constants/colors';
 
 class Settings extends React.Component {
+  state = {
+    userName: '',
+  };
+
+  async componentDidMount() {
+    const userData = await AsyncStorage.getItem('@witzUser');
+    if (userData) {
+      const user = JSON.parse(userData);
+      if (user) {
+        this.setState({userName: user.username});
+      }
+    }
+  }
+
   onPressItem = (item) => {
     if (item.name === 'Logout') {
       this.props.sendbirdLogout();
@@ -109,7 +122,7 @@ class Settings extends React.Component {
                 justifyContent: 'center',
                 borderBottomWidth: 0,
               }}>
-              <H3 heading>Dr Anita T</H3>
+              <H3 heading>{this.state.userName}</H3>
             </Body>
           </ListItem>
           <View

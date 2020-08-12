@@ -66,15 +66,16 @@ class Login extends React.Component {
   login = () => {
     if (!this.state.isSubmiting) {
       this.setState({isSubmiting: true});
-      ParseApi.User.logIn(this.state.email, this.state.password)
+      ParseApi.User.logIn(this.state.email.trim(), this.state.password)
         .then(async (user) => {
           console.log('Logged in user', user);
-          await AsyncStorage.setItem('@witzUser', user);
+          await AsyncStorage.setItem('@witzUser', JSON.stringify(user));
           await this.props.sendbirdLogin({
             userId: user.objectId,
             nickname: user.username,
           });
           this.setState({isSubmiting: false});
+          this.redirectToHomeScreen();
         })
         .catch((error) => {
           this.setState({isSubmiting: false});
