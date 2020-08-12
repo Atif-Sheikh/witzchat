@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, FlatList} from 'react-native';
+import {FlatList} from 'react-native';
 import {
   Container,
   Header,
@@ -11,13 +11,8 @@ import {
   Title,
   Thumbnail,
   View,
-  Content,
-  Text,
   Input,
-  Item,
-  Label,
 } from 'native-base';
-// import SendBird from 'sendbird';
 import {connect} from 'react-redux';
 import {
   openChannelProgress,
@@ -49,9 +44,6 @@ import ChatBubble from '../../components/chatBubble';
 
 import colors from '../../constants/colors';
 
-// var sb = null;
-// var groupChannel = null;
-
 class Chat extends React.Component {
   state = {
     channel: null,
@@ -64,18 +56,6 @@ class Chat extends React.Component {
   };
 
   componentDidMount = () => {
-    // sb = new SendBird({appId: '99ABD847-487B-424F-8C68-9D92B082B695'});
-    // var userIds = ['Atif-client', 'Atif-provider'];
-    // // When 'distinct' is false
-    // sb.GroupChannel.createChannelWithUserIds(userIds, false, (gc, error) => {
-    //   if (error) {
-    //     return;
-    //   }
-    //   groupChannel = gc;
-    //   console.log(gc);
-    //   this.createChannelHandler();
-    //   this.getPreviousMessages();
-    // });
     this._init();
   };
 
@@ -263,8 +243,6 @@ class Chat extends React.Component {
     );
   }
 }
-
-// export default Chat;
 
 function mapStateToProps({chat}) {
   let {title, memberCount, list, exit, typing, selectedMessages} = chat;

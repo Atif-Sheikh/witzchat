@@ -17,8 +17,6 @@ import {
 } from '../../actions';
 import {
   sbCreateGroupChannelListQuery,
-  sbUnixTimestampToDate,
-  sbGetChannelTitle,
 } from '../../sendbirdActions';
 
 import SearchInput from '../../components/searchInput';
@@ -70,7 +68,6 @@ class ClientScreen extends React.Component {
       this.props.clearSelectedGroupChannel();
       this.props.navigation.navigate('ChatScreen', data);
     }
-    // this.props.navigation.navigate('ChatScreen');
   };
 
   _initJoinState = () => {
