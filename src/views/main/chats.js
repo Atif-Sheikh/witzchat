@@ -15,18 +15,13 @@ import {
   Spinner,
 } from 'native-base';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {NavigationAction, CommonActions} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 import {sendbirdLogout, initMenu} from '../../actions';
-import {sbConnect} from '../../sendbirdActions';
 
 import ClientScreen from './clients';
-// import SendBird from 'sendbird';
 
 import colors from '../../constants/colors';
-
-// var sb = null;
 
 const Tab = createMaterialTopTabNavigator();
 const Tabs = () => (
