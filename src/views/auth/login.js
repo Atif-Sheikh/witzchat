@@ -29,8 +29,8 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
+      email: 'doctora',
+      password: 'P@ssword1',
       focusedInput: null,
       userType: 'client',
       isSubmiting: false,
@@ -69,10 +69,11 @@ class Login extends React.Component {
       ParseApi.User.logIn(this.state.email.trim(), this.state.password)
         .then(async (user) => {
           console.log('Logged in user', user);
-          await AsyncStorage.setItem('@witzUser', JSON.stringify(user));
+          const userData = JSON.parse(JSON.stringify(user));
+          await AsyncStorage.setItem('@witzUser', JSON.stringify(userData));
           await this.props.sendbirdLogin({
-            userId: user.objectId,
-            nickname: user.username,
+            userId: userData.objectId,
+            nickname: userData.username,
           });
           this.setState({isSubmiting: false});
           this.redirectToHomeScreen();

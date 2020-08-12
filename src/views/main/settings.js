@@ -26,7 +26,6 @@ import {connect} from 'react-redux';
 import {sendbirdLogout} from '../../actions';
 import AsyncStorage from '@react-native-community/async-storage';
 
-
 import colors from '../../constants/colors';
 
 class Settings extends React.Component {
@@ -39,7 +38,7 @@ class Settings extends React.Component {
     if (userData) {
       const user = JSON.parse(userData);
       if (user) {
-        this.setState({userName: user.username});
+        this.setState({userName: user.name ? user.name : user.username});
       }
     }
   }

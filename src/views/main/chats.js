@@ -47,21 +47,8 @@ class Chats extends React.Component {
     }
   };
 
-  getChannels = () => {
-    var channelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
-    channelListQuery.includeEmpty = true;
-    channelListQuery.order = 'latest_last_message'; // 'chronological', 'latest_last_message', 'channel_name_alphabetical', and 'metadata_value_alphabetical'
-    channelListQuery.limit = 15; // The value of pagination limit could be set up to 100.
-
-    if (channelListQuery.hasNext) {
-      channelListQuery.next(function (channelList, error) {
-        if (error) {
-          return;
-        }
-
-        console.log('channelList', channelList);
-      });
-    }
+  redirectToNewChat = () => {
+    this.props.navigation.navigate('NewChat');
   };
 
   render() {
@@ -110,7 +97,9 @@ class Chats extends React.Component {
               </H3>
             </View>
             <View>
-              <Icon name="edit" type="FontAwesome5" primary />
+              <Button onPress={this.redirectToNewChat} transparent>
+                <Icon name="edit" type="FontAwesome5" primary />
+              </Button>
             </View>
           </View>
           {userType === 'provider' ? (

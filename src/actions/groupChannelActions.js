@@ -10,101 +10,114 @@ import {
   CHANNEL_EDIT_FAIL,
   ADD_GROUP_CHANNEL_ITEM,
   CLEAR_SELECTED_GROUP_CHANNEL,
-  GROUP_CHANNEL_CHANGED
+  GROUP_CHANNEL_CHANGED,
 } from './types';
-import { sbGetGroupChannelList, sbGetGroupChannel, sbLeaveGroupChannel, sbHideGroupChannel } from '../sendbirdActions';
+import {
+  sbGetGroupChannelList,
+  sbGetGroupChannel,
+  sbLeaveGroupChannel,
+  sbHideGroupChannel,
+} from '../sendbirdActions';
 import SendBird from 'sendbird';
 
 export const initGroupChannel = () => {
   const sb = SendBird.getInstance();
   sb.removeAllChannelHandlers();
-  return { type: INIT_GROUP_CHANNEL };
+  return {type: INIT_GROUP_CHANNEL};
 };
 
-export const groupChannelProgress = start => {
+export const groupChannelProgress = (start) => {
   return {
-    type: start ? GROUP_CHANNEL_PROGRESS_START : GROUP_CHANNEL_PROGRESS_END
+    type: start ? GROUP_CHANNEL_PROGRESS_START : GROUP_CHANNEL_PROGRESS_END,
   };
 };
 
-export const getGroupChannelList = groupChannelListQuery => {
-  return dispatch => {
+export const getGroupChannelList = (groupChannelListQuery) => {
+  return (dispatch) => {
     if (groupChannelListQuery && groupChannelListQuery.hasNext) {
       return sbGetGroupChannelList(groupChannelListQuery)
-        .then(channels =>{
-          console.log('testing',channels);
-         return dispatch({
+        .then((channels) => {
+          console.log('testing', channels);
+          // for (const channel of channels) {
+          //   channel.leave(function (response, error) {
+          //     if (error) {
+          //       console.log('Not Deleted', error);
+          //     } else {
+          //       console.log('Deleted');
+          //     }
+          //   });
+          // }
+          return dispatch({
             type: GROUP_CHANNEL_LIST_SUCCESS,
-            list: channels
-          })
-        }
-        )
-        .catch(error => dispatch({ type: GROUP_CHANNEL_LIST_FAIL }));
+            list: channels,
+          });
+        })
+        .catch((error) => dispatch({type: GROUP_CHANNEL_LIST_FAIL}));
     } else {
-      dispatch({ type: GROUP_CHANNEL_LIST_FAIL });
+      dispatch({type: GROUP_CHANNEL_LIST_FAIL});
       return Promise.resolve();
     }
   };
 };
 
-export const onGroupChannelPress = channelUrl => {
-  return dispatch => {
+export const onGroupChannelPress = (channelUrl) => {
+  return (dispatch) => {
     return sbGetGroupChannel(channelUrl)
-      .then(channel =>
+      .then((channel) =>
         dispatch({
           type: GET_GROUP_CHANNEL_SUCCESS,
-          channel: channel
-        })
+          channel: channel,
+        }),
       )
-      .catch(error => dispatch({ type: GET_GROUP_CHANNEL_FAIL }));
+      .catch((error) => dispatch({type: GET_GROUP_CHANNEL_FAIL}));
   };
 };
 
-export const onLeaveChannelPress = channelUrl => {
-  return dispatch => {
+export const onLeaveChannelPress = (channelUrl) => {
+  return (dispatch) => {
     return sbLeaveGroupChannel(channelUrl)
-      .then(response =>
+      .then((response) =>
         dispatch({
           type: CHANNEL_EDIT_SUCCESS,
-          payload: channelUrl
-        })
+          payload: channelUrl,
+        }),
       )
-      .catch(error => dispatch({ type: CHANNEL_EDIT_FAIL }));
+      .catch((error) => dispatch({type: CHANNEL_EDIT_FAIL}));
   };
 };
 
-export const onHideChannelPress = channelUrl => {
-  return dispatch => {
+export const onHideChannelPress = (channelUrl) => {
+  return (dispatch) => {
     return sbHideGroupChannel(channelUrl)
-      .then(response =>
+      .then((response) =>
         dispatch({
           type: CHANNEL_EDIT_SUCCESS,
-          payload: channelUrl
-        })
+          payload: channelUrl,
+        }),
       )
-      .catch(error => dispatch({ type: CHANNEL_EDIT_FAIL }));
+      .catch((error) => dispatch({type: CHANNEL_EDIT_FAIL}));
   };
 };
 
-export const addGroupChannelItem = channel => {
+export const addGroupChannelItem = (channel) => {
   return {
     type: ADD_GROUP_CHANNEL_ITEM,
-    channel: channel
+    channel: channel,
   };
 };
 
 export const clearSelectedGroupChannel = () => {
-  return { type: CLEAR_SELECTED_GROUP_CHANNEL };
+  return {type: CLEAR_SELECTED_GROUP_CHANNEL};
 };
 
 export const createGroupChannelListHandler = () => {
-  return dispatch => {
+  return (dispatch) => {
     const sb = SendBird.getInstance();
     let channelHandler = new sb.ChannelHandler();
-    channelHandler.onChannelChanged = channel => {
+    channelHandler.onChannelChanged = (channel) => {
       dispatch({
         type: GROUP_CHANNEL_CHANGED,
-        channel: channel
+        channel: channel,
       });
     };
     sb.addChannelHandler('GROUP_CHANNEL_LIST_HANDLER', channelHandler);

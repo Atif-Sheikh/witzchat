@@ -25,12 +25,13 @@ import Calls from './src/views/main/calls';
 import Chats from './src/views/main/chats';
 import Settings from './src/views/main/settings';
 import ChatScreen from './src/views/main/chat';
+import NewChat from './src/views/main/newChat';
 
 import store from './src/store';
 
 import {StatusBar} from 'react-native';
 
-import {slideAnimation} from './animations';
+import {slideAnimation, fadeInAnimation, slideUpAnimation} from './animations';
 
 import colors from './src/constants/colors';
 
@@ -103,21 +104,7 @@ const App = () => {
                 options={{
                   cardStyle: {backgroundColor: 'transparent'},
                   cardOverlayEnabled: true,
-                  cardStyleInterpolator: ({current: {progress}}) => ({
-                    cardStyle: {
-                      opacity: progress.interpolate({
-                        inputRange: [0, 0.5, 0.9, 1],
-                        outputRange: [0, 0.25, 0.7, 1],
-                      }),
-                    },
-                    overlayStyle: {
-                      opacity: progress.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, 0.5],
-                        extrapolate: 'clamp',
-                      }),
-                    },
-                  }),
+                  cardStyleInterpolator: fadeInAnimation,
                 }}
               />
               <Stack.Screen
@@ -126,6 +113,15 @@ const App = () => {
               />
               <Stack.Screen name="Main" component={TabNavigatoins} />
               <Stack.Screen name="ChatScreen" component={ChatScreen} />
+              <Stack.Screen
+                name="NewChat"
+                component={NewChat}
+                options={{
+                  cardStyle: {backgroundColor: 'transparent'},
+                  cardOverlayEnabled: true,
+                  cardStyleInterpolator: slideUpAnimation,
+                }}
+              />
             </Stack.Navigator>
           </NavigationContainer>
         </>

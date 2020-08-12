@@ -15,9 +15,7 @@ import {
   createGroupChannelListHandler,
   createGroupChannel,
 } from '../../actions';
-import {
-  sbCreateGroupChannelListQuery,
-} from '../../sendbirdActions';
+import {sbCreateGroupChannelListQuery} from '../../sendbirdActions';
 
 import SearchInput from '../../components/searchInput';
 import ChatListItem from '../../components/chatListItem';
@@ -106,6 +104,9 @@ class ClientScreen extends React.Component {
         <ScrollView
           style={{
             paddingVertical: 10,
+          }}
+          contentContainerStyle={{
+            paddingBottom: 50,
           }}>
           {this.props.list.map((item, index) => (
             <ChatListItem

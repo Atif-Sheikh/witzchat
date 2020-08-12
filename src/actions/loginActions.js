@@ -6,6 +6,7 @@ export const initLogin = () => {
 };
 
 export const sendbirdLogin = ({ userId, nickname }) => {
+  console.log(userId,nickname);
   return dispatch => {
     return sbConnect(userId, nickname)
       .then(user => loginSuccess(dispatch, user))
