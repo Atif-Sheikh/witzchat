@@ -32,7 +32,8 @@
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "sendbird": "^3.0.131"
+    "sendbird": "^3.0.131",
+    "sendbird-calls": "^1.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",

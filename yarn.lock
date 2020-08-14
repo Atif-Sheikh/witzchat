@@ -6381,6 +6381,11 @@ send@0.17.1:
     range-parser "~1.2.1"
     statuses "~1.5.0"
 
+sendbird-calls@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/sendbird-calls/-/sendbird-calls-1.2.3.tgz#1c6c60edb287ca82363bb4801bbf3beda145f8c1"
+  integrity sha512-VDHiPLOwHyMimQvLcbAh2SF6o5rbJDpqnaZu1ya9plPDz8SnmkeUFWE+7oa7MZ8CdZ6P6RnnV6zNPDrvyKechA==
+
 sendbird@^3.0.131:
   version "3.0.131"
   resolved "https://registry.yarnpkg.com/sendbird/-/sendbird-3.0.131.tgz#fd942122add09d3efd1d3da2bda1218fd62ac783"

@@ -1,10 +1,11 @@
 import SendBird from 'sendbird';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import { sbCallConnect } from './calls';
 // import firebase from 'react-native-firebase';
 
 
-const APP_ID = '99ABD847-487B-424F-8C68-9D92B082B695';
+export const APP_ID = '99ABD847-487B-424F-8C68-9D92B082B695';
 
 // export const sbRegisterPushToken = () => {
 //   return new Promise((resolve, reject) => {
@@ -107,6 +108,7 @@ export const sbConnect = (userId, nickname) => {
       if (error) {
         reject('SendBird Login Failed.');
       } else {
+        sbCallConnect();
         resolve(sbUpdateProfile(nickname));
       }
     });
