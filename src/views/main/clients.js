@@ -2,6 +2,7 @@ import React from 'react';
 import {ScrollView, View} from 'react-native';
 import {Spinner} from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
+import moment from 'moment';
 
 import {connect} from 'react-redux';
 import {
@@ -35,10 +36,20 @@ class ClientScreen extends React.Component {
     if (userType && userType.length) {
       this.setState({userType, isLoading: false});
     }
+    this.focus = this.props.navigation.addListener('focus', () => {
+      this._initGroupChannelList();
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.focus) this.focus();
+  }
+
+  _initGroupChannelList = () => {
     this.props.initGroupChannel();
     this.props.createGroupChannelListHandler();
     this._getGroupChannelList(true);
-  }
+  };
 
   _getGroupChannelList = (init) => {
     this.props.groupChannelProgress(true);
@@ -58,9 +69,9 @@ class ClientScreen extends React.Component {
       const data = {
         channelUrl: channel.url,
         title: this.getChannelName(channel),
-        memberCount: channel.memberCount,
+        // memberCount: channel.memberCount,
         isOpenChannel: channel.isOpenChannel(),
-        _initListState: this._initJoinState,
+        // _initListState: this._initJoinState,
       };
       console.log(data);
       this.props.clearSelectedGroupChannel();
@@ -89,7 +100,6 @@ class ClientScreen extends React.Component {
 
   render() {
     const {isLoading, userType} = this.state;
-
     return isLoading ? (
       <View
         style={{
@@ -111,13 +121,18 @@ class ClientScreen extends React.Component {
           {this.props.list.map((item, index) => (
             <ChatListItem
               key={index}
-              imageUrl={
-                'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4'
-              }
+              imageUrl={item.coverUrl}
               name={this.getChannelName(item)}
               recentMsg={item.lastMessage ? item.lastMessage.message : ''}
-              time={'08:09am'}
-              unreadMsgCount={0}
+              time={
+                item.lastMessage
+                  ? moment(
+                      new Date(item.lastMessage.createdAt).toLocaleTimeString(),
+                      'HH:mm:ss',
+                    ).format('hh:mm A')
+                  : ''
+              }
+              unreadMsgCount={item.unreadMessageCount}
               showDoubleTick={false}
               showSingleTick={false}
               onPressChat={() => this.navigateToChat(item)}

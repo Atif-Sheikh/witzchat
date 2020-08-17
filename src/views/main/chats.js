@@ -55,7 +55,7 @@ class Chats extends React.Component {
     const {userType, isLoading} = this.state;
     return isLoading ? (
       <Container>
-        <Header transparent androidStatusBarColor={colors.white} />
+        <Header transparent androidStatusBarColor={'transparent'} />
         <View
           style={{
             flex: 1,
@@ -66,19 +66,19 @@ class Chats extends React.Component {
       </Container>
     ) : (
       <Container>
-        <Header transparent androidStatusBarColor={colors.white}>
-          <Left>
-            <Button transparent>
+        <Header transparent androidStatusBarColor={'transparent'} />
+          {/* <Left>
+            <Button transparent style={{width: 80, paddingLeft: 0}}>
               <Text style={{color: colors.primary}}>Edit</Text>
             </Button>
           </Left>
           <Body />
           <Right />
-        </Header>
+        </Header> */}
         <Content
           contentContainerStyle={{
             flex: 1,
-            paddingHorizontal: 25,
+            paddingHorizontal: 10,
           }}>
           <View
             style={{

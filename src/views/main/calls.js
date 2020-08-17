@@ -94,9 +94,9 @@ class Calls extends React.Component {
     const {chats} = this.state;
     return (
       <Container>
-        <Header transparent androidStatusBarColor={colors.white}>
+        <Header transparent androidStatusBarColor={'transparent'}>
           <Left>
-            <Button transparent>
+            <Button transparent style={{width: 80, paddingLeft: 0}}>
               <Text style={{color: colors.primary}}>Edit</Text>
             </Button>
           </Left>
@@ -113,7 +113,7 @@ class Calls extends React.Component {
         <Content
           contentContainerStyle={{
             flex: 1,
-            paddingHorizontal: 25,
+            paddingHorizontal: 10,
           }}>
           <View
             style={{

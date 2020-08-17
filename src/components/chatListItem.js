@@ -27,7 +27,8 @@ const ChatListItem = ({
       avatar
       style={{
         marginLeft: 0,
-      }} witzlistItem>
+      }}
+      witzlistItem>
       <Left>
         <Thumbnail
           source={{
@@ -66,7 +67,7 @@ const ChatListItem = ({
           </Text>
           {unreadMsgCount ? (
             <Badge primary>
-              <Text>{unreadMsgCount}</Text>
+              <Text>{unreadMsgCount > 9 ? '+9' : unreadMsgCount}</Text>
             </Badge>
           ) : null}
         </Right>

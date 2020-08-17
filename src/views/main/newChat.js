@@ -90,9 +90,9 @@ class NewChat extends React.Component {
     const data = {
       channelUrl: channel.url,
       title: this.getChannelName(channel),
-      memberCount: channel.memberCount,
+      // memberCount: channel.memberCount,
       isOpenChannel: channel.isOpenChannel(),
-      _initListState: this._initJoinState,
+      // _initListState: this._initJoinState,
     };
     this.props.navigation.navigate('ChatScreen', data);
   };
