@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, Alert} from 'react-native';
 import {
   Container,
   Header,
@@ -12,8 +12,12 @@ import {
   Thumbnail,
   View,
   Input,
+  Text,
 } from 'native-base';
 import {connect} from 'react-redux';
+import ImagePicker from 'react-native-image-picker';
+import Permissions, {PERMISSIONS, RESULTS} from 'react-native-permissions';
+
 import {
   openChannelProgress,
   groupChannelProgress,
@@ -41,6 +45,7 @@ import {
 } from '../../sendbirdActions';
 
 import ChatBubble from '../../components/chatBubble';
+import {ImageItem} from '../../components/ImageItem';
 
 import colors from '../../constants/colors';
 
@@ -130,20 +135,88 @@ class Chat extends React.Component {
     if (!channel) {
       return null;
     }
-    return (
-      <ChatBubble
+    // const isFile = item.isFileMessage();
+    // if (isFile) console.log(item);
+    // return isFile ? (
+    //   <ImageItem
+    //     isUser={item.isUser}
+    //     message={item.url.replace('http://', 'https://')}
+    //   />
+    // ) : (
+      return <ChatBubble
         key={item.messageId ? item.messageId : item.reqId}
-        msg={item.message}
+        message={item}
         time={item.time}
         sentByUser={item.isUser}
         showDoubleTick={item.isUser ? !channel.getReadReceipt(item) : 0}
         showSingleTick={item.isUser}
       />
-    );
+    // );
   };
 
   _onTextMessageChanged = (textMessage) => {
     this.setState({textMessage});
+  };
+
+  _onPhotoAddPress = () => {
+    const {channelUrl, isOpenChannel} = this.props.route.params;
+    Permissions.check(
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.PHOTO_LIBRARY
+        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+    ).then((response) => {
+      if (response === RESULTS.GRANTED) {
+        ImagePicker.showImagePicker(
+          {
+            title: 'Select Image File To Send',
+            mediaType: 'photo',
+            noData: true,
+          },
+          (response) => {
+            console.log('aya', response);
+            if (!response.didCancel && !response.error) {
+              console.log('yahain bhi aya');
+              let source = {uri: response.uri};
+              if (response.fileName) {
+                source['name'] = response.fileName;
+              } else {
+                let paths = response.uri.split('/');
+                source['name'] = paths[paths.length - 1];
+              }
+              if (response.type) {
+                source['type'] = response.type;
+              } else {
+                /** For react-native-image-picker library doesn't return type in iOS,
+                 *  it is necessary to force the type to be an image/jpeg (or whatever you're intended to be).
+                 */
+                if (Platform.OS === 'ios') {
+                  source['type'] = 'image/jpeg';
+                }
+              }
+              console.log('APBC', channelUrl, isOpenChannel, source);
+              this.props.onFileButtonPress(channelUrl, isOpenChannel, source);
+            }
+          },
+        );
+      } else if (response === RESULTS.DENIED) {
+        Permissions.request(
+          Platform.OS === 'ios'
+            ? PERMISSIONS.IOS.PHOTO_LIBRARY
+            : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+        ).then((response) => {
+          this._onPhotoAddPress();
+        });
+      } else {
+        Alert.alert(
+          'Permission denied',
+          'You declined the permission to access to your photo.',
+          [{text: 'OK'}],
+          {
+            cancelable: false,
+          },
+        );
+      }
+    });
   };
 
   render() {
@@ -231,7 +304,7 @@ class Chat extends React.Component {
               blurOnSubmit={false}
               onSubmitEditing={this._onSendButtonPress}
             />
-            <Button transparent>
+            <Button transparent onPress={this._onPhotoAddPress}>
               <Icon name="camera" type="FontAwesome5" />
             </Button>
             <Button transparent>

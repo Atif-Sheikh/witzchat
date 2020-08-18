@@ -1,9 +1,27 @@
 import React from 'react';
 import {View, Text, Icon} from 'native-base';
+import {ImageItem} from '../components/ImageItem';
 import colors from '../constants/colors';
 
+const _isImage = (type) => {
+  return type.match(/^image\/.+$/);
+};
+
+const renderMessage = (message, sentByUser) => {
+  if (message.isUserMessage()) {
+    return <Text>{message.message}</Text>;
+  } else if (_isImage(message.type)) {
+    return (
+      <ImageItem
+        isUser={sentByUser}
+        message={message.url.replace('http://', 'https://')}
+      />
+    );
+  }
+};
+
 const ChatBubble = ({
-  msg,
+  message,
   time,
   sentByUser,
   showDoubleTick,
@@ -23,7 +41,7 @@ const ChatBubble = ({
           padding: 10,
           borderRadius: 10,
         }}>
-        <Text>{msg}</Text>
+        {renderMessage(message, sentByUser)}
         <View
           style={{
             flexDirection: 'row',

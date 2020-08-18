@@ -50,7 +50,7 @@ const ChatListItem = ({
             ) : null}
 
             <Text gray>
-              {recentMsg.length > 20
+              {recentMsg && recentMsg.length > 20
                 ? recentMsg.substring(0, 20) + '...'
                 : recentMsg}
             </Text>

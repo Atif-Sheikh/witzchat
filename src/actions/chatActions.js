@@ -355,11 +355,14 @@ export const onFileButtonPress = (channelUrl, isOpenChannel, source) => {
 };
 
 const sendFileMessage = (dispatch, channel, file) => {
+  console.log('Aya');
   return new Promise((resolve, reject) => {
     sbSendFileMessage(channel, file, (message, error) => {
       if (error) {
+        console.log('done error', error);
         reject(error);
       } else {
+        console.log('done', message);
         resolve(message);
       }
     });
