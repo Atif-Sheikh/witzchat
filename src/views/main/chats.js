@@ -48,7 +48,12 @@ class Chats extends React.Component {
   };
 
   redirectToNewChat = () => {
-    this.props.navigation.navigate('NewChat');
+    this.props.navigation.navigate('NewChat', {
+      activeTab:
+        this.props.route.state && this.props.route.state.index > 0
+          ? 'provider'
+          : 'client',
+    });
   };
 
   render() {

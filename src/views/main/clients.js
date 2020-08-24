@@ -73,7 +73,9 @@ class ClientScreen extends React.Component {
         isOpenChannel: channel.isOpenChannel(),
         // _initListState: this._initJoinState,
       };
-      console.log(data);
+      console.log(
+        channel.members.map((item) => item.nickname),
+        );
       this.props.clearSelectedGroupChannel();
       this.props.navigation.navigate('ChatScreen', data);
     }
@@ -86,9 +88,6 @@ class ClientScreen extends React.Component {
   getChannelName = (item) => {
     const {userType} = this.state;
     if (item) {
-      if (userType === 'client') {
-        return item.inviter.nickname;
-      }
       for (const member of item.members) {
         if (member.userId !== item.inviter.userId) {
           return member.nickname;

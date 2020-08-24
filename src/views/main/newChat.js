@@ -38,34 +38,42 @@ class NewChat extends React.Component {
     userType: 'client',
     isLoading: true,
     userData: null,
+    activeTab: 'client',
   };
   async componentDidMount() {
+    const {activeTab} = this.props.route.params;
     const userType = await AsyncStorage.getItem('@witzchatUserType');
     const userData = await AsyncStorage.getItem('@witzUser');
     if (userData) {
       const user = JSON.parse(userData);
       if (user) {
-        this.setState({userType, userData: user});
+        this.setState({userType, userData: user, activeTab}, () => {
+          this.getUsers();
+        });
       }
     }
-    this.getUsers();
   }
 
   getUsers = () => {
-    const query = new ParseApi.Query(ParseApi.User);
+    const model =
+      this.state.activeTab === 'client'
+        ? ParseApi.User
+        : ParseApi.Object.extend('CareTeamMember');
+    const query = new ParseApi.Query(model);
+    query.notEqualTo('username', this.state.userData.username);
     query.find().then(
       (data) => {
         const users = data
           .map((item) => {
             const userData = JSON.parse(JSON.stringify(item));
+            console.log(userData);
             return {
               userId: userData.objectId,
-              name: userData.name,
+              name: userData.firstName,
               email: userData.email,
               username: userData.username,
             };
           })
-          .filter((item) => item.userId !== this.state.userData.objectId);
         this.setState({
           users,
         });
@@ -85,7 +93,7 @@ class NewChat extends React.Component {
     const {userData} = this.state;
     userIds.push(userData.objectId);
     console.log(userIds);
-    await this.props.createGroupChannel(userIds, true);
+    await this.props.createGroupChannel(userIds, true, this.state.activeTab);
     const {channel} = this.props;
     const data = {
       channelUrl: channel.url,
