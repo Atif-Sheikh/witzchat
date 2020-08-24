@@ -91,6 +91,10 @@ export const sbCreateGroupChannel = (
     sb.GroupChannel.createChannelWithUserIds(
       inviteUserIdList,
       isDistinct,
+      null,
+      null,
+      null,
+      customType,
       (channel, error) => {
         if (error) {
           reject(error);

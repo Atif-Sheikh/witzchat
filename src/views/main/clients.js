@@ -56,6 +56,8 @@ class ClientScreen extends React.Component {
     if (init) {
       const groupChannelListQuery = sbCreateGroupChannelListQuery();
       groupChannelListQuery.includeEmpty = true;
+      groupChannelListQuery.customTypesFilter =
+        this.props.route.name === 'Client' ? ['client'] : ['provider'];
       this.setState({groupChannelListQuery}, () => {
         this.props.getGroupChannelList(this.state.groupChannelListQuery);
       });
@@ -73,9 +75,6 @@ class ClientScreen extends React.Component {
         isOpenChannel: channel.isOpenChannel(),
         // _initListState: this._initJoinState,
       };
-      console.log(
-        channel.members.map((item) => item.nickname),
-        );
       this.props.clearSelectedGroupChannel();
       this.props.navigation.navigate('ChatScreen', data);
     }
