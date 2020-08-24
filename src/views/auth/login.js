@@ -12,6 +12,7 @@ import {
   Label,
   Icon,
   Spinner,
+  Toast,
 } from 'native-base';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -29,8 +30,10 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
+      // email: '',
+      // password: '',
+      email: 'doctora',
+      password: 'P@ssword1',
       focusedInput: null,
       userType: 'client',
       isSubmiting: false,
@@ -57,7 +60,13 @@ class Login extends React.Component {
     this.setState({focusedInput: null});
   };
 
-  redirectToHomeScreen = async () => {
+  redirectToHomeScreen = async (userData) => {
+    await AsyncStorage.setItem('@witzUser', JSON.stringify(userData));
+    await this.props.sendbirdLogin({
+      userId: userData.objectId,
+      nickname: userData.username,
+    });
+    this.setState({isSubmiting: false});
     await AsyncStorage.setItem('@witzchatUserType', this.state.userType);
 
     this.props.navigation.navigate('Main');
@@ -70,13 +79,28 @@ class Login extends React.Component {
         .then(async (user) => {
           console.log('Logged in user', user);
           const userData = JSON.parse(JSON.stringify(user));
-          await AsyncStorage.setItem('@witzUser', JSON.stringify(userData));
-          await this.props.sendbirdLogin({
-            userId: userData.objectId,
-            nickname: userData.username,
-          });
-          this.setState({isSubmiting: false});
-          this.redirectToHomeScreen();
+          if (this.state.userType === 'client') {
+            this.redirectToHomeScreen(userData);
+          } else {
+            const careteammember = ParseApi.Object.extend('careteammember');
+            const query = new ParseApi.Query(careteammember);
+            query.equalTo('email', userData.email);
+            query
+              .find()
+              .then(async (res) => {
+                const data = JSON.parse(JSON.stringify(res));
+                if (data.length) {
+                  this.redirectToHomeScreen(userData);
+                  return;
+                }
+                this.setState({isSubmiting: false});
+                alert('Unauthorized Access');
+              })
+              .catch((error) => {
+                this.setState({isSubmiting: false});
+                console.error('Error while logging in user', error);
+              });
+          }
         })
         .catch((error) => {
           this.setState({isSubmiting: false});

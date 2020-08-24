@@ -173,9 +173,7 @@ class Chat extends React.Component {
             noData: true,
           },
           (response) => {
-            console.log('aya', response);
             if (!response.didCancel && !response.error) {
-              console.log('yahain bhi aya');
               let source = {uri: response.uri};
               if (response.fileName) {
                 source['name'] = response.fileName;
@@ -193,7 +191,6 @@ class Chat extends React.Component {
                   source['type'] = 'image/jpeg';
                 }
               }
-              console.log('APBC', channelUrl, isOpenChannel, source);
               this.props.onFileButtonPress(channelUrl, isOpenChannel, source);
             }
           },
@@ -309,6 +306,9 @@ class Chat extends React.Component {
             </Button>
             <Button transparent>
               <Icon name="microphone" type="FontAwesome5" />
+            </Button>
+            <Button transparent onPress={this._onSendButtonPress}>
+              <Icon name="send" type="FontAwesome" />
             </Button>
           </View>
         </View>

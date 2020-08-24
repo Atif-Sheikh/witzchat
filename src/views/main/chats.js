@@ -66,8 +66,12 @@ class Chats extends React.Component {
       </Container>
     ) : (
       <Container>
-        <Header transparent androidStatusBarColor={'transparent'} />
-          {/* <Left>
+        <Header
+          transparent
+          androidStatusBarColor={'transparent'}
+          style={{height: 0}}
+        />
+        {/* <Left>
             <Button transparent style={{width: 80, paddingLeft: 0}}>
               <Text style={{color: colors.primary}}>Edit</Text>
             </Button>
@@ -78,7 +82,7 @@ class Chats extends React.Component {
         <Content
           contentContainerStyle={{
             flex: 1,
-            paddingHorizontal: 10,
+            // paddingHorizontal: 10,
           }}>
           <View
             style={{
