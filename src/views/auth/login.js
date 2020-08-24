@@ -82,9 +82,9 @@ class Login extends React.Component {
           if (this.state.userType === 'client') {
             this.redirectToHomeScreen(userData);
           } else {
-            const careteammember = ParseApi.Object.extend('careteammember');
+            const careteammember = ParseApi.Object.extend('CareTeamMember');
             const query = new ParseApi.Query(careteammember);
-            query.equalTo('email', userData.email);
+            query.equalTo('username', user.getUsername());
             query
               .find()
               .then(async (res) => {
