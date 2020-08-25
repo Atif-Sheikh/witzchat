@@ -56,24 +56,24 @@ class Settings extends React.Component {
 
   render() {
     const listItems = [
-      {
-        name: 'Starred Messages',
-      },
-      {
-        name: 'Account',
-      },
-      {
-        name: 'Chat',
-      },
-      {
-        name: 'Notifications',
-      },
-      {
-        name: 'Data and Storage Usage',
-      },
-      {
-        name: 'Help',
-      },
+      // {
+      //   name: 'Starred Messages',
+      // },
+      // {
+      //   name: 'Account',
+      // },
+      // {
+      //   name: 'Chat',
+      // },
+      // {
+      //   name: 'Notifications',
+      // },
+      // {
+      //   name: 'Data and Storage Usage',
+      // },
+      // {
+      //   name: 'Help',
+      // },
       {
         name: 'Logout',
       },

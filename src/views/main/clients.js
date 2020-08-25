@@ -29,12 +29,18 @@ class ClientScreen extends React.Component {
     groupChannelListQuery: null,
     userType: 'client',
     isLoading: true,
+    userData: null,
   };
 
   async componentDidMount() {
     const userType = await AsyncStorage.getItem('@witzchatUserType');
-    if (userType && userType.length) {
-      this.setState({userType, isLoading: false});
+    const userData = await AsyncStorage.getItem('@witzUser');
+    if (userType && userType.length && userData) {
+      this.setState({
+        userType,
+        isLoading: false,
+        userData: JSON.parse(userData),
+      });
     }
     this.focus = this.props.navigation.addListener('focus', () => {
       this._initGroupChannelList();
@@ -75,6 +81,11 @@ class ClientScreen extends React.Component {
         isOpenChannel: channel.isOpenChannel(),
         // _initListState: this._initJoinState,
       };
+      console.log(
+        'Members : ',
+        channel.members.map((item) => item.nickname),
+      );
+      console.log('Channel Type : ', channel.customType)
       this.props.clearSelectedGroupChannel();
       this.props.navigation.navigate('ChatScreen', data);
     }
@@ -85,10 +96,10 @@ class ClientScreen extends React.Component {
   };
 
   getChannelName = (item) => {
-    const {userType} = this.state;
+    const {userData} = this.state;
     if (item) {
       for (const member of item.members) {
-        if (member.userId !== item.inviter.userId) {
+        if (member.userId !== userData.objectId) {
           return member.nickname;
         }
       }
