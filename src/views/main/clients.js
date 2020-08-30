@@ -1,10 +1,10 @@
 import React from 'react';
-import {ScrollView, View} from 'react-native';
-import {Spinner} from 'native-base';
+import { ScrollView, View } from 'react-native';
+import { Spinner } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
   initGroupChannel,
   groupChannelProgress,
@@ -16,7 +16,7 @@ import {
   createGroupChannelListHandler,
   createGroupChannel,
 } from '../../actions';
-import {sbCreateGroupChannelListQuery} from '../../sendbirdActions';
+import { sbCreateGroupChannelListQuery } from '../../sendbirdActions';
 
 import SearchInput from '../../components/searchInput';
 import ChatListItem from '../../components/chatListItem';
@@ -40,11 +40,15 @@ class ClientScreen extends React.Component {
         userType,
         isLoading: false,
         userData: JSON.parse(userData),
+      }, () => {
+        if (this.props.route.name === 'Client') {
+          this._initGroupChannelList();
+        }
+        this.focus = this.props.navigation.addListener('focus', () => {
+          this._initGroupChannelList();
+        });
       });
     }
-    this.focus = this.props.navigation.addListener('focus', () => {
-      this._initGroupChannelList();
-    });
   }
 
   componentWillUnmount() {
@@ -64,7 +68,7 @@ class ClientScreen extends React.Component {
       groupChannelListQuery.includeEmpty = true;
       groupChannelListQuery.customTypesFilter =
         this.props.route.name === 'Client' ? ['client'] : ['provider'];
-      this.setState({groupChannelListQuery}, () => {
+      this.setState({ groupChannelListQuery }, () => {
         this.props.getGroupChannelList(this.state.groupChannelListQuery);
       });
     } else {
@@ -92,11 +96,11 @@ class ClientScreen extends React.Component {
   };
 
   _initJoinState = () => {
-    this.setState({joinChannel: false});
+    this.setState({ joinChannel: false });
   };
 
   getChannelName = (item) => {
-    const {userData} = this.state;
+    const { userData } = this.state;
     if (item) {
       for (const member of item.members) {
         if (member.userId !== userData.objectId) {
@@ -108,7 +112,7 @@ class ClientScreen extends React.Component {
   };
 
   render() {
-    const {isLoading, userType} = this.state;
+    const { isLoading, userType } = this.state;
     return isLoading ? (
       <View
         style={{
@@ -118,44 +122,44 @@ class ClientScreen extends React.Component {
         <Spinner color={colors.primary} />
       </View>
     ) : (
-      <View style={{backgroundColor: colors.white}}>
-        <SearchInput />
-        <ScrollView
-          style={{
-            paddingVertical: 10,
-          }}
-          contentContainerStyle={{
-            paddingBottom: 50,
-          }}>
-          {this.props.list.map((item, index) => (
-            <ChatListItem
-              key={index}
-              imageUrl={item.coverUrl}
-              name={this.getChannelName(item)}
-              recentMsg={item.lastMessage ? item.lastMessage.message : ''}
-              time={
-                item.lastMessage
-                  ? moment(
+        <View style={{ backgroundColor: colors.white }}>
+          <SearchInput />
+          <ScrollView
+            style={{
+              paddingVertical: 10,
+            }}
+            contentContainerStyle={{
+              paddingBottom: 50,
+            }}>
+            {this.props.list.map((item, index) => (
+              <ChatListItem
+                key={index}
+                imageUrl={item.coverUrl}
+                name={this.getChannelName(item)}
+                recentMsg={item.lastMessage ? item.lastMessage.message : ''}
+                time={
+                  item.lastMessage
+                    ? moment(
                       new Date(item.lastMessage.createdAt).toLocaleTimeString(),
                       'HH:mm:ss',
                     ).format('hh:mm A')
-                  : ''
-              }
-              unreadMsgCount={item.unreadMessageCount}
-              showDoubleTick={false}
-              showSingleTick={false}
-              onPressChat={() => this.navigateToChat(item)}
-            />
-          ))}
-        </ScrollView>
-      </View>
-    );
+                    : ''
+                }
+                unreadMsgCount={item.unreadMessageCount}
+                showDoubleTick={false}
+                showSingleTick={false}
+                onPressChat={() => this.navigateToChat(item)}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      );
   }
 }
 
-function mapStateToProps({groupChannel, userInfo, user}) {
-  const {isLoading, list, channel} = groupChannel;
-  return {isLoading, list, channel, userInfo, user};
+function mapStateToProps({ groupChannel, userInfo, user }) {
+  const { isLoading, list, channel } = groupChannel;
+  return { isLoading, list, channel, userInfo, user };
 }
 
 export default connect(mapStateToProps, {
