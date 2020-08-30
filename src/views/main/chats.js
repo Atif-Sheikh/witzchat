@@ -100,6 +100,7 @@ class Chats extends React.Component {
               <H3
                 style={{
                   marginBottom: 20,
+                  paddingLeft: 10
                 }}
                 heading>
                 Chats
