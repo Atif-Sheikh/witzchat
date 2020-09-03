@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image} from 'react-native';
+import { Image } from 'react-native';
 import {
   Container,
   Content,
@@ -16,10 +16,10 @@ import {
 } from 'native-base';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import ParseApi from '../../utils/parse';
-import {initLogin, sendbirdLogin} from '../../actions';
+import { initLogin, sendbirdLogin } from '../../actions';
 
 import images from '../../constants/images';
 import colors from '../../constants/colors';
@@ -53,11 +53,11 @@ class Login extends React.Component {
   }
 
   setFocusedInput = (input) => {
-    this.setState({focusedInput: input});
+    this.setState({ focusedInput: input });
   };
 
   resetFocusedInput = () => {
-    this.setState({focusedInput: null});
+    this.setState({ focusedInput: null });
   };
 
   redirectToHomeScreen = async (userData) => {
@@ -66,7 +66,7 @@ class Login extends React.Component {
       userId: userData.objectId,
       nickname: userData.username,
     });
-    this.setState({isSubmiting: false});
+    this.setState({ isSubmiting: false });
     await AsyncStorage.setItem('@witzchatUserType', this.state.userType);
 
     this.props.navigation.navigate('Main');
@@ -74,7 +74,7 @@ class Login extends React.Component {
 
   login = () => {
     if (!this.state.isSubmiting) {
-      this.setState({isSubmiting: true});
+      this.setState({ isSubmiting: true });
       ParseApi.User.logIn(this.state.email.trim(), this.state.password)
         .then(async (user) => {
           console.log('Logged in user', user);
@@ -93,31 +93,34 @@ class Login extends React.Component {
                   this.redirectToHomeScreen(userData);
                   return;
                 }
-                this.setState({isSubmiting: false});
-                alert('Unauthorized Access');
+                this.setState({ isSubmiting: false });
+                // alert('Unauthorized Access');
+                Toast.show({ text: 'Unauthorized Access', type: 'danger', buttonText: 'Okay' });
               })
               .catch((error) => {
-                this.setState({isSubmiting: false});
-                console.error('Error while logging in user', error);
+                Toast.show({ text: 'Invalid username or password', type: 'danger', buttonText: 'Okay' });
+                this.setState({ isSubmiting: false });
+                console.log('Error while logging in user', error);
               });
           }
         })
         .catch((error) => {
-          this.setState({isSubmiting: false});
-          console.error('Error while logging in user', error);
+          Toast.show({ text: 'Invalid username or password', type: 'danger', buttonText: 'Okay' });
+          this.setState({ isSubmiting: false });
+          console.log('Error while logging in user', error);
         });
     }
   };
 
   render() {
-    const {focusedInput} = this.state;
+    const { focusedInput } = this.state;
     return (
       <Container>
         <Content
           contentContainerStyle={{
             flex: 1,
           }}>
-          <View style={{flex: 1, backgroundColor: colors.white}}>
+          <View style={{ flex: 1, backgroundColor: colors.white }}>
             <View
               style={{
                 flex: 0.4,
@@ -136,11 +139,11 @@ class Login extends React.Component {
               style={{
                 flex: 0.6,
               }}>
-              <View style={{marginTop: 20}}>
+              <View style={{ marginTop: 20 }}>
                 <ToggleButtons
                   options={['client', 'provider']}
                   value={this.state.userType}
-                  onPress={(value) => this.setState({userType: value})}
+                  onPress={(value) => this.setState({ userType: value })}
                 />
               </View>
               <Form
@@ -163,7 +166,7 @@ class Login extends React.Component {
                     returnKeyType={'next'}
                     getRef={(input) => (this.inputs['one'] = input)}
                     autoCapitalize={'none'}
-                    onChangeText={(email) => this.setState({email})}
+                    onChangeText={(email) => this.setState({ email })}
                   />
                 </Item>
                 <Item floatingLabel active={focusedInput === 'password'}>
@@ -177,7 +180,7 @@ class Login extends React.Component {
                     onSubmitEditing={this.login}
                     returnKeyType={'done'}
                     getRef={(input) => (this.inputs['two'] = input)}
-                    onChangeText={(password) => this.setState({password})}
+                    onChangeText={(password) => this.setState({ password })}
                   />
                 </Item>
                 <Button
@@ -190,12 +193,12 @@ class Login extends React.Component {
                   {this.state.isSubmiting ? (
                     <Spinner color={colors.white} />
                   ) : (
-                    <Text>Log in</Text>
-                  )}
+                      <Text>Log in</Text>
+                    )}
                 </Button>
               </Form>
             </View>
-            <View style={{alignSelf: 'center'}}>
+            <View style={{ alignSelf: 'center' }}>
               <Button
                 transparent
                 onPress={() => {
@@ -216,9 +219,9 @@ class Login extends React.Component {
   }
 }
 
-function mapStateToProps({login}) {
-  const {error, user} = login;
-  return {error, user};
+function mapStateToProps({ login }) {
+  const { error, user } = login;
+  return { error, user };
 }
 
-export default connect(mapStateToProps, {initLogin, sendbirdLogin})(Login);
+export default connect(mapStateToProps, { initLogin, sendbirdLogin })(Login);

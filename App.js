@@ -8,7 +8,7 @@
 
 import React from 'react';
 
-import {StyleProvider, Icon} from 'native-base';
+import {StyleProvider, Icon, Root} from 'native-base';
 import {Provider} from 'react-redux';
 
 import getTheme from './native-base-theme/components';
@@ -85,6 +85,7 @@ const TabNavigatoins = () => (
 const App = () => {
   return (
     <Provider store={store}>
+      <Root>
       <StyleProvider style={getTheme(material)}>
         <>
           <StatusBar backgroundColor={colors.white} />
@@ -126,6 +127,7 @@ const App = () => {
           </NavigationContainer>
         </>
       </StyleProvider>
+      </Root>
     </Provider>
   );
 };

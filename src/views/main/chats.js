@@ -107,9 +107,11 @@ class Chats extends React.Component {
               </H3>
             </View>
             <View>
-              <Button onPress={this.redirectToNewChat} transparent>
-                <Icon name="edit" type="FontAwesome5" primary />
-              </Button>
+              {userType ==='provider'?
+                <Button onPress={this.redirectToNewChat} transparent>
+                  <Icon name="edit" type="FontAwesome5" primary />
+                </Button>
+              :null}
             </View>
           </View>
           {userType === 'provider' ? (
