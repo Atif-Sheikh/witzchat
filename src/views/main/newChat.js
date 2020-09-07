@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, Image, StyleSheet, StatusBar} from 'react-native';
+import { ScrollView, Image, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import {
   View,
   H3,
@@ -20,15 +20,16 @@ import {
   ListItem,
   Thumbnail,
   Badge,
+  Toast
 } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
-import {connect} from 'react-redux';
-import {createGroupChannel} from '../../actions';
+import { connect } from 'react-redux';
+import { createGroupChannel } from '../../actions';
 
 import ParseApi from '../../utils/parse';
 
 import SearchInput from '../../components/searchInput';
-import NewChatListItem from '../../components/newChatListItem';
+import { NewChatListItem, ThumbnailWithSelectIcon } from '../../components/newChatListItem';
 
 import colors from '../../constants/colors';
 
@@ -39,20 +40,25 @@ class NewChat extends React.Component {
     isLoading: true,
     userData: null,
     activeTab: 'client',
+    title: '',
+    groupChat: true,
+    defaultImage: 'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
+    search: ''
   };
   async componentDidMount() {
-    const {activeTab} = this.props.route.params;
+    const { activeTab } = this.props.route.params;
     const userType = await AsyncStorage.getItem('@witzchatUserType');
     const userData = await AsyncStorage.getItem('@witzUser');
     if (userData) {
       const user = JSON.parse(userData);
       if (user) {
-        this.setState({userType, userData: user, activeTab}, () => {
+        this.setState({ userType, userData: user, activeTab }, () => {
           this.getUsers();
         });
       }
     }
   }
+
 
   getUsers = () => {
     const model =
@@ -72,6 +78,7 @@ class NewChat extends React.Component {
               name: userData.firstName,
               email: userData.email,
               username: userData.username,
+              selected: false,
             };
           })
         this.setState({
@@ -90,11 +97,11 @@ class NewChat extends React.Component {
 
   createChannel = async (userId) => {
     const userIds = [userId];
-    const {userData} = this.state;
+    const { userData } = this.state;
     userIds.push(userData.objectId);
     console.log(userIds);
     await this.props.createGroupChannel(userIds, true, this.state.activeTab);
-    const {channel} = this.props;
+    const { channel } = this.props;
     const data = {
       channelUrl: channel.url,
       title: this.getChannelName(channel),
@@ -109,7 +116,7 @@ class NewChat extends React.Component {
   };
 
   getChannelName = (item) => {
-    const {userType} = this.state;
+    const { userType } = this.state;
     if (item) {
       if (userType === 'client') {
         return item.inviter.nickname;
@@ -123,8 +130,31 @@ class NewChat extends React.Component {
     return '';
   };
 
+  selectUser = (item) => {
+    if (this.state.groupChat) {
+      const users = this.state.users.map(user => ({ ...user, selected: item.userId === user.userId ? !user.selected : user.selected }));
+      this.setState({ users });
+    } else {
+      this.createChannel(item.userId);
+    }
+  }
+
+  redirectToNewChatScreen = () => {
+    const { users } = this.state;
+    const selectedUsers = users.filter(user => user.selected);
+    if (selectedUsers && selectedUsers.length >= 1) {
+      this.props.navigation.navigate('NewChatGroup', {
+        users: selectedUsers,
+      });
+    } else {
+      Toast.show({ text: 'Select at least two users for group chat', buttonText: 'Okay', type: 'warning' });
+    }
+  }
+
   render() {
-    const {users} = this.state;
+    const { users, groupChat, defaultImage, search } = this.state;
+    const selectedUsers = users.filter(user => user.selected);
+    const filteredUsers = users.filter(user => search && search.trim().length ? user.name.toLowerCase().indexOf(search.trim().toLowerCase()) >= 0 : true);
     return (
       <View
         style={{
@@ -145,13 +175,17 @@ class NewChat extends React.Component {
             style={{
               flexDirection: 'row',
             }}>
-            <Left />
-            <Body>
-              <H3 heading>New Chat</H3>
-            </Body>
-            <Right>
+            <Left>
               <Button transparent onPress={this.goBack}>
                 <Text>Cancel</Text>
+              </Button>
+            </Left>
+            <Body>
+              <H3 heading>{groupChat ? 'New Group Chat' : 'New Chat'}</H3>
+            </Body>
+            <Right>
+              <Button transparent onPress={this.redirectToNewChatScreen}>
+                <Text>Next</Text>
               </Button>
             </Right>
           </View>
@@ -159,19 +193,59 @@ class NewChat extends React.Component {
             style={{
               paddingHorizontal: 20,
             }}>
-            <SearchInput />
+            <SearchInput value={search} onChangeText={(value) => this.setState({ search: value })} />
             <ScrollView
               style={{
                 paddingVertical: 10,
               }}>
-              {users.map((item, index) => (
+              {groupChat ?
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                  {selectedUsers.map(user => <TouchableOpacity onPress={() => this.selectUser(user)}
+                    style={{ paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
+                    <ThumbnailWithSelectIcon imageUrl={defaultImage} showIcon={true} selected={false} />
+                    <Text>{user.name.length > 10 ? `${user.name.substring(0, 7)}...` : user.name}</Text>
+                  </TouchableOpacity>)}
+                </View> :
+                <ListItem
+                  avatar
+                  style={{
+                    marginLeft: 0,
+                    borderBottomColor: 'red',
+                  }}
+                  witzlistItem
+                  onPress={() => this.setState({ groupChat: true })}>
+                  <Left>
+                    <View style={{
+                      backgroundColor: colors.primary,
+                      padding: 10,
+                      borderRadius: 100,
+                      height: 55,
+                      width: 55,
+                      justifyContent: 'center'
+
+                    }}>
+                      <Icon name="users" type="FontAwesome5" style={{
+                        color: colors.white,
+                        textAlign: 'center'
+                      }} />
+                    </View>
+                  </Left>
+                  <Body
+                    style={{
+                      height: 80,
+                      justifyContent: 'center'
+                    }}>
+                    <Text heading>New Group</Text>
+                  </Body>
+                </ListItem>}
+              {filteredUsers.map((item, index) => (
                 <NewChatListItem
                   key={index}
-                  imageUrl={
-                    'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4'
-                  }
+                  imageUrl={defaultImage}
                   name={item.name ? item.name : item.username}
-                  onPress={() => this.createChannel(item.userId)}
+                  onPress={() => this.selectUser(item)}
+                  showIcon={groupChat && item.selected}
+                  selected={groupChat && item.selected}
                 />
               ))}
             </ScrollView>
@@ -182,10 +256,10 @@ class NewChat extends React.Component {
   }
 }
 
-function mapStateToProps({groupChannelInvite}) {
-  return {channel: groupChannelInvite.channel};
+function mapStateToProps({ groupChannelInvite }) {
+  return { channel: groupChannelInvite.channel };
 }
 
-export default connect(mapStateToProps, {createGroupChannel})(NewChat);
+export default connect(mapStateToProps, { createGroupChannel })(NewChat);
 
 const styles = StyleSheet.create({});

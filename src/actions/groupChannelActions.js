@@ -37,7 +37,7 @@ export const getGroupChannelList = (groupChannelListQuery) => {
     if (groupChannelListQuery && groupChannelListQuery.hasNext) {
       return sbGetGroupChannelList(groupChannelListQuery)
         .then((channels) => {
-          console.log('testing', channels);
+          console.log('testing', channels.length);
           // for (const channel of channels) {
           //   channel.leave(function (response, error) {
           //     if (error) {

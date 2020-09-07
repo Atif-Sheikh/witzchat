@@ -26,6 +26,7 @@ import Chats from './src/views/main/chats';
 import Settings from './src/views/main/settings';
 import ChatScreen from './src/views/main/chat';
 import NewChat from './src/views/main/newChat';
+import NewChatGroup from './src/views/main/newChatGroup';
 
 import store from './src/store';
 
@@ -117,6 +118,15 @@ const App = () => {
               <Stack.Screen
                 name="NewChat"
                 component={NewChat}
+                options={{
+                  cardStyle: {backgroundColor: 'transparent'},
+                  cardOverlayEnabled: true,
+                  cardStyleInterpolator: slideUpAnimation,
+                }}
+              />
+              <Stack.Screen
+                name="NewChatGroup"
+                component={NewChatGroup}
                 options={{
                   cardStyle: {backgroundColor: 'transparent'},
                   cardOverlayEnabled: true,
