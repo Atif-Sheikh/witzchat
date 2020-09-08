@@ -203,7 +203,7 @@ class NewChat extends React.Component {
                   {selectedUsers.map(user => <TouchableOpacity onPress={() => this.selectUser(user)}
                     style={{ paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
                     <ThumbnailWithSelectIcon imageUrl={defaultImage} showIcon={true} selected={false} />
-                    <Text>{user.name.length > 10 ? `${user.name.substring(0, 7)}...` : user.name}</Text>
+                    <Text>{user.name && user.name.length > 10 ? `${user.name.substring(0, 7)}...` : user.name}</Text>
                   </TouchableOpacity>)}
                 </View> :
                 <ListItem

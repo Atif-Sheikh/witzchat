@@ -142,7 +142,7 @@ class NewChatGroup extends React.Component {
                 {users.map(user => <TouchableOpacity
                   style={{ paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
                   <ThumbnailWithSelectIcon imageUrl={defaultImage} showIcon={false} />
-                  <Text>{user.name.length > 10 ? `${user.name.substring(0, 7)}...` : user.name}</Text>
+                  <Text>{user.name && user.name.length > 10 ? `${user.name.substring(0, 7)}...` : user.name}</Text>
                 </TouchableOpacity>)}
               </View>
             </ScrollView>
