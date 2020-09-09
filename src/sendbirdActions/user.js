@@ -4,9 +4,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 // import firebase from 'react-native-firebase';
 
 
-export const APP_ID = '99ABD847-487B-424F-8C68-9D92B082B695';
-export const API_TOKEN = 'a41fba721a59bff9bc67e1609c61998f664ff09b';
-// export const APP_ID = '7DF82299-2850-44D4-AFAD-768F14CF6931';
+// export const APP_ID = '99ABD847-487B-424F-8C68-9D92B082B695';
+// export const API_TOKEN = 'a41fba721a59bff9bc67e1609c61998f664ff09b';
+export const APP_ID = '7DF82299-2850-44D4-AFAD-768F14CF6931';
+export const API_TOKEN = '2108d522efb2a2d281ee4a14d166dec9bcfb0644';
+
 
 // export const sbRegisterPushToken = () => {
 //   return new Promise((resolve, reject) => {
