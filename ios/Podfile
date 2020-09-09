@@ -11,6 +11,7 @@ target 'withzchat' do
   target 'withzchatTests' do
     inherit! :complete
     # Pods for testing
+    pod 'RNPermissions', :path => "../node_modules/react-native-permissions"
   end
 
   # Enables Flipper.

@@ -8,48 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* withzchatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* withzchatTests.m */; };
-		0692AB56F4C04F73A3639E51 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 78FEFD40367E46959408A700 /* Roboto-BoldItalic.ttf */; };
-		10BBC4EF60C44371B4B3C081 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BAFC6A66AEE4A4DB822EBB9 /* AntDesign.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		16FF7CCD24764E06B8C5670A /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 02A12E17DB4A4D9EA8A54449 /* Roboto-MediumItalic.ttf */; };
-		2719000CEB174CCE9ED98C3C /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6F8B5781BD5B4C24B761F9AF /* MaterialIcons.ttf */; };
-		27A603528EF44C9B9C704AE4 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5C13E3DE9054EDAB5EB581F /* Feather.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* withzchatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* withzchatTests.m */; };
-		35919B1F73524105B46A8625 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F9ECD7F4EB91446D992FC17B /* Octicons.ttf */; };
-		35E7B105CA194DFF82428BFA /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 148AEC0CE54647C8A21978E0 /* Roboto-Regular.ttf */; };
-		37F7F48A555444719683194D /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 234A5C00C9414EBDAF979881 /* Roboto.ttf */; };
-		38F64A5B7FB04532A01C71D8 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BEB8334FD05249E5AFB2460C /* Foundation.ttf */; };
-		4510DB3F403449D7BFC2C2B2 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40A43874EB324D9EA097D54B /* FontAwesome5_Solid.ttf */; };
-		4AD57FFC2F724D4AB45417DD /* Roboto_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E7BF67E75224EFB8EE47CAA /* Roboto_medium.ttf */; };
-		5EA862976A0A4C42924C4811 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9F25CE3FAC414C16AC82235E /* Roboto-BlackItalic.ttf */; };
-		60F81C89627542E09B5F95EC /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C0AC7E4B016D4AE8BB01178D /* Roboto-Thin.ttf */; };
-		6378E867E34747CFAA2D20DF /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1096B56428D2441986C3CBC5 /* Roboto-Bold.ttf */; };
-		641E3F8EC8F940F3BC4C7F64 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AD7A32510254F30B21C270D /* MaterialCommunityIcons.ttf */; };
-		6BE2035EB066487585661EA1 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E7D38A0329EF4E47B6AEEC30 /* Roboto-ThinItalic.ttf */; };
-		6ECF8B3282E44B0396250D4E /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F13884630EA54C4893AB593A /* FontAwesome.ttf */; };
-		77AEEC1067784758B63CF7C2 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C078E584C4149179160CC8C /* Roboto-Medium.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		86DF719150FE4D13A1B9C2AC /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0FAEF4FD1FF641BF93E052DD /* Roboto-Italic.ttf */; };
-		89B3E450FCEA4ECB938E73B1 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AEA5985221EA438EBFCCEA01 /* EvilIcons.ttf */; };
-		A18870FD72B1403B9F053A40 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D37C6CF47DBF4C29BFBFACD9 /* Fontisto.ttf */; };
-		B6B79D8EF24F41B09D14A945 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 404F033AB07A44EBA27F51CC /* FontAwesome5_Regular.ttf */; };
-		B7CA7EA4FAED4602922092B4 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 403A391D830444CBA07481BE /* Roboto-Light.ttf */; };
-		BA92A152DBDC41F093BB8D10 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0700CEF0C6A64D0D9D03588B /* Roboto-LightItalic.ttf */; };
-		CA35919B950C4C75B9FEB0BD /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F7E8D09D48540B69AB641E6 /* Roboto-Black.ttf */; };
-		CAD1E48065854BCFAC09B872 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD1A8E96CF234715A9F81516 /* Zocial.ttf */; };
-		D44DFC6459844BB2B263D617 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F33D751CE532471FABE0C789 /* Ionicons.ttf */; };
-		D4E961B1A14048F094B0E10D /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CA44CA8C6D59494B9564E81C /* FontAwesome5_Brands.ttf */; };
+		924B2CAA25067F10000D2F1F /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 234A5C00C9414EBDAF979881 /* Roboto.ttf */; };
 		D8C2A15455CD29C0B4FA2309 /* libPods-withzchat-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 116AE8D2EE3088778401D7C9 /* libPods-withzchat-tvOSTests.a */; };
-		DFF91874071E42ED988EA0C2 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F727A29F1FEE4C5796578135 /* SimpleLineIcons.ttf */; };
 		E45CEDEE78C8A3FF0E5710A5 /* libPods-withzchat-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4761C4469968CD6A3C48E6E2 /* libPods-withzchat-tvOS.a */; };
 		E97307AA4904AA762A886A14 /* libPods-withzchat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02EA4D34096A020188654D80 /* libPods-withzchat.a */; };
-		E9EDC1C386D749B0AA62352B /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FEE2CE82A38E42B2A245FAFF /* Entypo.ttf */; };
-		F09056BA5DA94D47B7BF3072 /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C1B75016E469479693EB3C91 /* rubicon-icon-font.ttf */; };
 		FC7C1D6BCF413702D8289D6B /* libPods-withzchat-withzchatTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F02E3CAE570897962A428CF5 /* libPods-withzchat-withzchatTests.a */; };
 /* End PBXBuildFile section */
 
@@ -84,7 +54,7 @@
 		0FAEF4FD1FF641BF93E052DD /* Roboto-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Italic.ttf"; path = "../src/assets/fonts/Roboto/Roboto-Italic.ttf"; sourceTree = "<group>"; };
 		1096B56428D2441986C3CBC5 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../src/assets/fonts/Roboto/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		116AE8D2EE3088778401D7C9 /* libPods-withzchat-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-withzchat-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07F961A680F5B00A75B9A /* withzchat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = withzchat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* witzchat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = witzchat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = withzchat/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = withzchat/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = withzchat/Images.xcassets; sourceTree = "<group>"; };
@@ -275,7 +245,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* withzchat.app */,
+				13B07F961A680F5B00A75B9A /* witzchat.app */,
 				00E356EE1AD99517003FC87E /* withzchatTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* withzchat-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* withzchat-tvOSTests.xctest */,
@@ -339,7 +309,7 @@
 			);
 			name = withzchat;
 			productName = withzchat;
-			productReference = 13B07F961A680F5B00A75B9A /* withzchat.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* witzchat.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2D02E47A1E0B4A5D006451C7 /* withzchat-tvOS */ = {
@@ -440,39 +410,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				924B2CAA25067F10000D2F1F /* Roboto.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				CA35919B950C4C75B9FEB0BD /* Roboto-Black.ttf in Resources */,
-				5EA862976A0A4C42924C4811 /* Roboto-BlackItalic.ttf in Resources */,
-				6378E867E34747CFAA2D20DF /* Roboto-Bold.ttf in Resources */,
-				0692AB56F4C04F73A3639E51 /* Roboto-BoldItalic.ttf in Resources */,
-				86DF719150FE4D13A1B9C2AC /* Roboto-Italic.ttf in Resources */,
-				B7CA7EA4FAED4602922092B4 /* Roboto-Light.ttf in Resources */,
-				BA92A152DBDC41F093BB8D10 /* Roboto-LightItalic.ttf in Resources */,
-				77AEEC1067784758B63CF7C2 /* Roboto-Medium.ttf in Resources */,
-				16FF7CCD24764E06B8C5670A /* Roboto-MediumItalic.ttf in Resources */,
-				35E7B105CA194DFF82428BFA /* Roboto-Regular.ttf in Resources */,
-				60F81C89627542E09B5F95EC /* Roboto-Thin.ttf in Resources */,
-				6BE2035EB066487585661EA1 /* Roboto-ThinItalic.ttf in Resources */,
-				10BBC4EF60C44371B4B3C081 /* AntDesign.ttf in Resources */,
-				E9EDC1C386D749B0AA62352B /* Entypo.ttf in Resources */,
-				89B3E450FCEA4ECB938E73B1 /* EvilIcons.ttf in Resources */,
-				27A603528EF44C9B9C704AE4 /* Feather.ttf in Resources */,
-				6ECF8B3282E44B0396250D4E /* FontAwesome.ttf in Resources */,
-				D4E961B1A14048F094B0E10D /* FontAwesome5_Brands.ttf in Resources */,
-				B6B79D8EF24F41B09D14A945 /* FontAwesome5_Regular.ttf in Resources */,
-				4510DB3F403449D7BFC2C2B2 /* FontAwesome5_Solid.ttf in Resources */,
-				A18870FD72B1403B9F053A40 /* Fontisto.ttf in Resources */,
-				38F64A5B7FB04532A01C71D8 /* Foundation.ttf in Resources */,
-				D44DFC6459844BB2B263D617 /* Ionicons.ttf in Resources */,
-				641E3F8EC8F940F3BC4C7F64 /* MaterialCommunityIcons.ttf in Resources */,
-				2719000CEB174CCE9ED98C3C /* MaterialIcons.ttf in Resources */,
-				35919B1F73524105B46A8625 /* Octicons.ttf in Resources */,
-				4AD57FFC2F724D4AB45417DD /* Roboto_medium.ttf in Resources */,
-				37F7F48A555444719683194D /* Roboto.ttf in Resources */,
-				F09056BA5DA94D47B7BF3072 /* rubicon-icon-font.ttf in Resources */,
-				DFF91874071E42ED988EA0C2 /* SimpleLineIcons.ttf in Resources */,
-				CAD1E48065854BCFAC09B872 /* Zocial.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -860,7 +800,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = withzchat;
+				PRODUCT_NAME = witzchat;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -882,7 +822,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = withzchat;
+				PRODUCT_NAME = witzchat;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
