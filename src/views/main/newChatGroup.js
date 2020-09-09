@@ -38,14 +38,16 @@ class NewChatGroup extends React.Component {
     userData: null,
     title: '',
     defaultImage: 'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
+    activeTab: 'client',
   };
   async componentDidMount() {
+    const { activeTab } = this.props.route.params;
     const { users } = this.props.route.params;
     const userData = await AsyncStorage.getItem('@witzUser');
     if (userData) {
       const user = JSON.parse(userData);
       if (user) {
-        this.setState({ userData: user, users });
+        this.setState({ userData: user, users, activeTab });
       }
     }
   }
@@ -55,15 +57,55 @@ class NewChatGroup extends React.Component {
     this.props.navigation.goBack();
   };
 
+  createUserOnSendBird = async (user) => {
+
+    const usersApiUrl = `https://api-${APP_ID}.sendbird.com/v3/users`;
+    let alreadyExist = true;
+    try {
+      const res = await axios.request(
+        {
+          method: 'get',
+          url: `${usersApiUrl}/${user.userId}`,
+          headers: { 'Api-Token': API_TOKEN }
+        })
+      alreadyExist = res && res.data;
+
+    } catch (err) {
+      if (
+        err && err.response && err.response.data &&
+        err.response.data.code && err.response.data.code === 400201) {
+        alreadyExist = false;
+      }
+    }
+    if (!alreadyExist) {
+      try {
+        await axios.request(
+          {
+            method: 'post',
+            url: usersApiUrl,
+            data: {
+              user_id: user.userId,
+              nickname: user.username,
+              profile_url: "https://i.stack.imgur.com/l60Hf.png"
+            },
+            headers: { 'Api-Token': API_TOKEN }
+          })
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
+
   createChannel = async () => {
     const { userData, users, title } = this.state;
     if (title && title.trim().length) {
-
-
+      for (const user of users) {
+        await this.createUserOnSendBird(user);
+      }
       const userIds = [users.map(user => user.userId)];
       userIds.push(userData.objectId);
       console.log(userIds);
-      await this.props.createGroupChannel(userIds, false, 'provider');
+      await this.props.createGroupChannel(userIds, false, this.state.activeTab);
       const { channel } = this.props;
       const data = {
         channelUrl: channel.url,

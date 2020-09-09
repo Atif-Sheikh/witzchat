@@ -30,8 +30,11 @@ import ParseApi from '../../utils/parse';
 
 import SearchInput from '../../components/searchInput';
 import { NewChatListItem, ThumbnailWithSelectIcon } from '../../components/newChatListItem';
+import * as axios from 'axios';
 
 import colors from '../../constants/colors';
+
+import { APP_ID, API_TOKEN } from '../../sendbirdActions/user';
 
 class NewChat extends React.Component {
   state = {
@@ -41,7 +44,7 @@ class NewChat extends React.Component {
     userData: null,
     activeTab: 'client',
     title: '',
-    groupChat: true,
+    groupChat: false,
     defaultImage: 'https://avatars0.githubusercontent.com/u/26920662?s=400&u=407bc704158505fbad27731d5c7ea9212e803f3b&v=4',
     search: ''
   };
@@ -95,8 +98,49 @@ class NewChat extends React.Component {
     this.props.navigation.goBack();
   };
 
-  createChannel = async (userId) => {
-    const userIds = [userId];
+  createUserOnSendBird = async (user) => {
+
+    const usersApiUrl = `https://api-${APP_ID}.sendbird.com/v3/users`;
+    let alreadyExist = true;
+    try {
+      const res = await axios.request(
+        {
+          method: 'get',
+          url: `${usersApiUrl}/${user.userId}`,
+          headers: { 'Api-Token': API_TOKEN }
+        })
+      alreadyExist = res && res.data;
+
+    } catch (err) {
+      if (
+        err && err.response && err.response.data &&
+        err.response.data.code && err.response.data.code === 400201) {
+        alreadyExist = false;
+      }
+    }
+    if (!alreadyExist) {
+      try {
+        await axios.request(
+          {
+            method: 'post',
+            url: usersApiUrl,
+            data: {
+              user_id: user.userId,
+              nickname: user.username,
+              profile_url: "https://i.stack.imgur.com/l60Hf.png"
+            },
+            headers: { 'Api-Token': API_TOKEN }
+          })
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
+
+  createChannel = async (guest) => {
+    await this.createUserOnSendBird(guest);
+
+    const userIds = [guest.userId];
     const { userData } = this.state;
     userIds.push(userData.objectId);
     console.log(userIds);
@@ -135,16 +179,17 @@ class NewChat extends React.Component {
       const users = this.state.users.map(user => ({ ...user, selected: item.userId === user.userId ? !user.selected : user.selected }));
       this.setState({ users });
     } else {
-      this.createChannel(item.userId);
+      this.createChannel(item);
     }
   }
 
   redirectToNewChatScreen = () => {
-    const { users } = this.state;
+    const { users, activeTab } = this.state;
     const selectedUsers = users.filter(user => user.selected);
     if (selectedUsers && selectedUsers.length >= 1) {
       this.props.navigation.navigate('NewChatGroup', {
         users: selectedUsers,
+        activeTab
       });
     } else {
       Toast.show({ text: 'Select at least two users for group chat', buttonText: 'Okay', type: 'warning' });
