@@ -25,6 +25,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import { createGroupChannel } from '../../actions';
+import { API_TOKEN, APP_ID } from '../../sendbirdActions';
 
 
 import { ThumbnailWithSelectIcon } from '../../components/newChatListItem';
@@ -105,7 +106,7 @@ class NewChatGroup extends React.Component {
       const userIds = [users.map(user => user.userId)];
       userIds.push(userData.objectId);
       console.log(userIds);
-      await this.props.createGroupChannel(userIds, false, this.state.activeTab);
+      await this.props.createGroupChannel(userIds, false, this.state.activeTab, title);
       const { channel } = this.props;
       const data = {
         channelUrl: channel.url,

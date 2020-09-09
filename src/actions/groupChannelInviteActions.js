@@ -67,10 +67,10 @@ export const getUserList = (userListQuery, channelUrl = null) => {
   };
 };
 
-export const createGroupChannel = (inviteUserIdList, isDistinct, customType) => {
+export const createGroupChannel = (inviteUserIdList, isDistinct, customType, title) => {
   console.log("Aya", customType)
   return dispatch => {
-    return sbCreateGroupChannel(inviteUserIdList, isDistinct, customType)
+    return sbCreateGroupChannel(inviteUserIdList, isDistinct, customType, title)
       .then(channel => {
         console.log('Channel', channel);
         dispatch({

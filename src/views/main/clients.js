@@ -77,6 +77,7 @@ class ClientScreen extends React.Component {
   };
 
   navigateToChat = (channel) => {
+    console.log(channel.name);
     if (channel) {
       const data = {
         channelUrl: channel.url,
@@ -101,6 +102,9 @@ class ClientScreen extends React.Component {
 
   getChannelName = (item) => {
     const { userData } = this.state;
+    if(item.name && item.name.length){
+      return item.name;
+    }
     if (item) {
       for (const member of item.members) {
         if (member.userId !== userData.objectId) {

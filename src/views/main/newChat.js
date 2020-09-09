@@ -144,11 +144,11 @@ class NewChat extends React.Component {
     const { userData } = this.state;
     userIds.push(userData.objectId);
     console.log(userIds);
-    await this.props.createGroupChannel(userIds, true, this.state.activeTab);
+    await this.props.createGroupChannel(userIds, true, this.state.activeTab, guest.username);
     const { channel } = this.props;
     const data = {
       channelUrl: channel.url,
-      title: this.getChannelName(channel),
+      title: channel.name,
       // memberCount: channel.memberCount,
       isOpenChannel: channel.isOpenChannel(),
       // _initListState: this._initJoinState,
@@ -161,6 +161,9 @@ class NewChat extends React.Component {
 
   getChannelName = (item) => {
     const { userType } = this.state;
+    if(item.name && item.name.length){
+      return item.name;
+    }
     if (item) {
       if (userType === 'client') {
         return item.inviter.nickname;
@@ -199,7 +202,7 @@ class NewChat extends React.Component {
   render() {
     const { users, groupChat, defaultImage, search } = this.state;
     const selectedUsers = users.filter(user => user.selected);
-    const filteredUsers = users.filter(user => search && search.trim().length ? user.name.toLowerCase().indexOf(search.trim().toLowerCase()) >= 0 : true);
+    const filteredUsers = users.filter(user => search && search.trim().length && user.name ? user.name.toLowerCase().indexOf(search.trim().toLowerCase()) >= 0 : true);
     return (
       <View
         style={{

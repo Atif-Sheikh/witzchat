@@ -85,13 +85,14 @@ export const sbCreateGroupChannel = (
   inviteUserIdList,
   isDistinct,
   customType = 'client',
+  title = '',
 ) => {
   return new Promise((resolve, reject) => {
     const sb = SendBird.getInstance();
     sb.GroupChannel.createChannelWithUserIds(
       inviteUserIdList,
       isDistinct,
-      null,
+      title,
       null,
       null,
       customType,
