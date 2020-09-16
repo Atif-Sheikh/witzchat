@@ -3,15 +3,20 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
+
 target 'withzchat' do
   config = use_native_modules!
 
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+  pod 'Permission-MediaLibrary', :path => "#{permissions_path}/MediaLibrary.podspec"
+  pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary.podspec"
+    
   use_react_native!(:path => config["reactNativePath"])
 
   target 'withzchatTests' do
     inherit! :complete
     # Pods for testing
-    pod 'RNPermissions', :path => "../node_modules/react-native-permissions"
   end
 
   # Enables Flipper.
