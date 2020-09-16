@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Alert } from 'react-native';
+import {FlatList, Alert} from 'react-native';
 import {
   Container,
   Header,
@@ -14,11 +14,10 @@ import {
   Input,
   Text,
 } from 'native-base';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
-import Permissions, { PERMISSIONS, RESULTS } from 'react-native-permissions';
+import Permissions, {PERMISSIONS, RESULTS} from 'react-native-permissions';
 import DocumentPicker from 'react-native-document-picker';
-
 
 import {
   openChannelProgress,
@@ -47,7 +46,7 @@ import {
 } from '../../sendbirdActions';
 
 import ChatBubble from '../../components/chatBubble';
-import { ImageItem } from '../../components/ImageItem';
+import {ImageItem} from '../../components/ImageItem';
 
 import colors from '../../constants/colors';
 
@@ -68,28 +67,28 @@ class Chat extends React.Component {
 
   _init = () => {
     this.props.initChatScreen();
-    const { channelUrl, isOpenChannel } = this.props.route.params;
+    const {channelUrl, isOpenChannel} = this.props.route.params;
     console.log(channelUrl, isOpenChannel);
     if (isOpenChannel) {
       sbGetOpenChannel(channelUrl).then((channel) =>
-        this.setState({ channel }, () => this._componentInit()),
+        this.setState({channel}, () => this._componentInit()),
       );
     } else {
       sbGetGroupChannel(channelUrl).then((channel) =>
-        this.setState({ channel }, () => this._componentInit()),
+        this.setState({channel}, () => this._componentInit()),
       );
     }
   };
 
   _componentInit = () => {
-    const { channelUrl, isOpenChannel } = this.props.route.params;
+    const {channelUrl, isOpenChannel} = this.props.route.params;
     this.props.openChannelProgress(false);
     this.props.groupChannelProgress(false);
     this.props.getChannelTitle(channelUrl, isOpenChannel);
     this.props.createChatHandler(channelUrl, isOpenChannel);
     this._getMessageList(true);
     if (!isOpenChannel) {
-      sbMarkAsRead({ channelUrl });
+      sbMarkAsRead({channelUrl});
     }
   };
 
@@ -97,12 +96,12 @@ class Chat extends React.Component {
     if (!this.state.previousMessageListQuery && !init) {
       return;
     }
-    const { channelUrl, isOpenChannel } = this.props.route.params;
-    this.setState({ isLoading: true }, () => {
+    const {channelUrl, isOpenChannel} = this.props.route.params;
+    this.setState({isLoading: true}, () => {
       if (init) {
         sbCreatePreviousMessageListQuery(channelUrl, isOpenChannel)
           .then((previousMessageListQuery) => {
-            this.setState({ previousMessageListQuery }, () => {
+            this.setState({previousMessageListQuery}, () => {
               this.props.getPrevMessageList(
                 this.state.previousMessageListQuery,
               );
@@ -117,9 +116,9 @@ class Chat extends React.Component {
 
   _onSendButtonPress = () => {
     if (this.state.textMessage) {
-      const { channelUrl, isOpenChannel } = this.props.route.params;
-      const { textMessage } = this.state;
-      this.setState({ textMessage: '' }, () => {
+      const {channelUrl, isOpenChannel} = this.props.route.params;
+      const {textMessage} = this.state;
+      this.setState({textMessage: ''}, () => {
         this.props.onSendButtonPress(channelUrl, isOpenChannel, textMessage);
         if (this.props && this.props.list && this.props.list.length > 0) {
           this.flatList.scrollToIndex({
@@ -133,7 +132,7 @@ class Chat extends React.Component {
 
   _renderList = (rowData) => {
     const item = rowData.item;
-    const { channel } = this.state;
+    const {channel} = this.state;
     if (!channel) {
       return null;
     }
@@ -145,23 +144,25 @@ class Chat extends React.Component {
     //     message={item.url.replace('http://', 'https://')}
     //   />
     // ) : (
-    return <ChatBubble
-      key={item.messageId ? item.messageId : item.reqId}
-      message={item}
-      time={item.time}
-      sentByUser={item.isUser}
-      showDoubleTick={item.isUser ? !channel.getReadReceipt(item) : 0}
-      showSingleTick={item.isUser}
-    />
+    return (
+      <ChatBubble
+        key={item.messageId ? item.messageId : item.reqId}
+        message={item}
+        time={item.time}
+        sentByUser={item.isUser}
+        showDoubleTick={item.isUser ? !channel.getReadReceipt(item) : 0}
+        showSingleTick={item.isUser}
+      />;
+    );
     // );
   };
 
   _onTextMessageChanged = (textMessage) => {
-    this.setState({ textMessage });
+    this.setState({textMessage});
   };
 
   _onPhotoAddPress = () => {
-    const { channelUrl, isOpenChannel } = this.props.route.params;
+    const {channelUrl, isOpenChannel} = this.props.route.params;
     Permissions.check(
       Platform.OS === 'ios'
         ? PERMISSIONS.IOS.PHOTO_LIBRARY
@@ -176,21 +177,21 @@ class Chat extends React.Component {
           },
           (response) => {
             if (!response.didCancel && !response.error) {
-              let source = { uri: response.uri };
+              let source = {uri: response.uri};
               if (response.fileName) {
-                source['name'] = response.fileName;
+                source.name = response.fileName;
               } else {
                 let paths = response.uri.split('/');
-                source['name'] = paths[paths.length - 1];
+                source.name = paths[paths.length - 1];
               }
               if (response.type) {
-                source['type'] = response.type;
+                source.type = response.type;
               } else {
                 /** For react-native-image-picker library doesn't return type in iOS,
                  *  it is necessary to force the type to be an image/jpeg (or whatever you're intended to be).
                  */
                 if (Platform.OS === 'ios') {
-                  source['type'] = 'image/jpeg';
+                  source.type = 'image/jpeg';
                 }
               }
               this.props.onFileButtonPress(channelUrl, isOpenChannel, source);
@@ -209,7 +210,7 @@ class Chat extends React.Component {
         Alert.alert(
           'Permission denied',
           'You declined the permission to access to your photo.',
-          [{ text: 'OK' }],
+          [{text: 'OK'}],
           {
             cancelable: false,
           },
@@ -219,19 +220,23 @@ class Chat extends React.Component {
   };
 
   _onDocumentAddPress = () => {
-    const { channelUrl, isOpenChannel } = this.props.route.params;
-    Permissions.check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then(async (response) => {
+    const {channelUrl, isOpenChannel} = this.props.route.params;
+    Permissions.check(
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.MEDIA_LIBRARY
+        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+    ).then(async (response) => {
       if (response === RESULTS.GRANTED) {
         try {
           const response = await DocumentPicker.pick({
             type: [DocumentPicker.types.allFiles],
           });
-          let source = { uri: response.uri };
+          let source = {uri: response.uri};
           if (response.name) {
-            source['name'] = response.name;
+            source.name = response.name;
           }
           if (response.type) {
-            source['type'] = response.type;
+            source.type = response.type;
           }
           this.props.onFileButtonPress(channelUrl, isOpenChannel, source);
         } catch (err) {
@@ -239,7 +244,7 @@ class Chat extends React.Component {
             Alert.alert(
               'Permission denied',
               'You declined the permission to access to your photo.',
-              [{ text: 'OK' }],
+              [{text: 'OK'}],
               {
                 cancelable: false,
               },
@@ -260,17 +265,17 @@ class Chat extends React.Component {
         Alert.alert(
           'Permission denied',
           'You declined the permission to access to your photo.',
-          [{ text: 'OK' }],
+          [{text: 'OK'}],
           {
             cancelable: false,
           },
         );
       }
     });
-  }
+  };
 
   render() {
-    const { title } = this.props.route.params;
+    const {title} = this.props.route.params;
     return (
       <Container>
         <Header transparent androidStatusBarColor={colors.white}>
@@ -295,7 +300,7 @@ class Chat extends React.Component {
                   width: 50,
                 }}
               />
-              <Title heading style={{ marginLeft: 10 }}>
+              <Title heading style={{marginLeft: 10}}>
                 {title}
               </Title>
             </View>
@@ -370,11 +375,11 @@ class Chat extends React.Component {
   }
 }
 
-function mapStateToProps({ chat }) {
-  let { title, memberCount, list, exit, typing, selectedMessages } = chat;
+function mapStateToProps({chat}) {
+  let {title, memberCount, list, exit, typing, selectedMessages} = chat;
 
   list = sbAdjustMessageList(list);
-  return { title, memberCount, list, exit, typing, selectedMessages };
+  return {title, memberCount, list, exit, typing, selectedMessages};
 }
 
 export default connect(mapStateToProps, {
