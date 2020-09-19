@@ -58,7 +58,7 @@ class Chat extends React.Component {
     textMessage: '',
   };
   goBack = () => {
-    this.props.navigation.goBack();
+    this.props.navigation.navigate('Chats');
   };
 
   componentDidMount = () => {
@@ -152,7 +152,7 @@ class Chat extends React.Component {
         sentByUser={item.isUser}
         showDoubleTick={item.isUser ? !channel.getReadReceipt(item) : 0}
         showSingleTick={item.isUser}
-      />;
+      />
     );
     // );
   };

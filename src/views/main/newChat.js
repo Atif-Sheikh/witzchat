@@ -148,7 +148,7 @@ class NewChat extends React.Component {
     const { channel } = this.props;
     const data = {
       channelUrl: channel.url,
-      title: channel.name,
+      title: this.getChannelName(channel),
       // memberCount: channel.memberCount,
       isOpenChannel: channel.isOpenChannel(),
       // _initListState: this._initJoinState,
