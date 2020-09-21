@@ -153,7 +153,7 @@ class NewChatGroup extends React.Component {
               </Button>
             </Left>
             <Body>
-              <H3 heading>New Group Chat</H3>
+              <H3 heading>New Group</H3>
             </Body>
             <Right>
               <Button transparent onPress={this.createChannel}>

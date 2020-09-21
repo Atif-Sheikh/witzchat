@@ -90,5 +90,7 @@
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+	<key>UIDocumentPickerViewController</key>
+    <string>$(PRODUCT_NAME) would like access to your document</string>
 </dict>
 </plist>

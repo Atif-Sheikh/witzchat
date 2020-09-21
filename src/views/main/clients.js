@@ -131,6 +131,7 @@ class ClientScreen extends React.Component {
           <ScrollView
             style={{
               paddingVertical: 10,
+              paddingLeft: 10
             }}
             contentContainerStyle={{
               paddingBottom: 50,

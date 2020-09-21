@@ -229,7 +229,7 @@ class NewChat extends React.Component {
               </Button>
             </Left>
             <Body>
-              <H3 heading>{groupChat ? 'New Group Chat' : 'New Chat'}</H3>
+              <H3 heading>{groupChat ? 'New Group' : 'New Chat'}</H3>
             </Body>
             <Right>
               <Button transparent onPress={this.redirectToNewChatScreen}>
