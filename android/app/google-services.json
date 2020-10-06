@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "951975533310",
+    "firebase_url": "https://witzchat-f577f.firebaseio.com",
+    "project_id": "witzchat-f577f",
+    "storage_bucket": "witzchat-f577f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951975533310:android:93619878f991884e3123af",
+        "android_client_info": {
+          "package_name": "com.withzchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951975533310-b43l1345l6okrn7o4lg51qct20p4h8bt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.withzchat",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "951975533310-vds3qrsia6rdd3j6prckfk4j7grhfpfd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7Ja0tSs6wU2dIO1VPx-hlz0kzDtqE0JM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "951975533310-vds3qrsia6rdd3j6prckfk4j7grhfpfd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
