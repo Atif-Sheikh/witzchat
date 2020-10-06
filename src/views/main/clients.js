@@ -1,10 +1,11 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { ScrollView, View } from 'react-native';
-import { Spinner } from 'native-base';
+import {ScrollView, View} from 'react-native';
+import {Spinner} from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {
   initGroupChannel,
   groupChannelProgress,
@@ -16,7 +17,7 @@ import {
   createGroupChannelListHandler,
   createGroupChannel,
 } from '../../actions';
-import { sbCreateGroupChannelListQuery } from '../../sendbirdActions';
+import {sbCreateGroupChannelListQuery} from '../../sendbirdActions';
 
 import SearchInput from '../../components/searchInput';
 import ChatListItem from '../../components/chatListItem';
@@ -30,29 +31,36 @@ class ClientScreen extends React.Component {
     userType: 'client',
     isLoading: true,
     userData: null,
+
+    searchKey: '',
   };
 
   async componentDidMount() {
     const userType = await AsyncStorage.getItem('@witzchatUserType');
     const userData = await AsyncStorage.getItem('@witzUser');
     if (userType && userType.length && userData) {
-      this.setState({
-        userType,
-        isLoading: false,
-        userData: JSON.parse(userData),
-      }, () => {
-        if (this.props.route.name === 'Client') {
-          this._initGroupChannelList();
-        }
-        this.focus = this.props.navigation.addListener('focus', () => {
-          this._initGroupChannelList();
-        });
-      });
+      this.setState(
+        {
+          userType,
+          isLoading: false,
+          userData: JSON.parse(userData),
+        },
+        () => {
+          if (this.props.route.name === 'Client') {
+            this._initGroupChannelList();
+          }
+          this.focus = this.props.navigation.addListener('focus', () => {
+            this._initGroupChannelList();
+          });
+        },
+      );
     }
   }
 
   componentWillUnmount() {
-    if (this.focus) this.focus();
+    if (this.focus) {
+      this.focus();
+    }
   }
 
   _initGroupChannelList = () => {
@@ -68,7 +76,7 @@ class ClientScreen extends React.Component {
       groupChannelListQuery.includeEmpty = true;
       groupChannelListQuery.customTypesFilter =
         this.props.route.name === 'Client' ? ['client'] : ['provider'];
-      this.setState({ groupChannelListQuery }, () => {
+      this.setState({groupChannelListQuery}, () => {
         this.props.getGroupChannelList(this.state.groupChannelListQuery);
       });
     } else {
@@ -90,19 +98,23 @@ class ClientScreen extends React.Component {
         'Members : ',
         channel.members.map((item) => item.nickname),
       );
-      console.log('Channel Type : ', channel.customType)
+      console.log('Channel Type : ', channel.customType);
       this.props.clearSelectedGroupChannel();
       this.props.navigation.navigate('ChatScreen', data);
     }
   };
 
   _initJoinState = () => {
-    this.setState({ joinChannel: false });
+    this.setState({joinChannel: false});
+  };
+
+  onChangeSearch = (val) => {
+    this.setState({searchKey: val});
   };
 
   getChannelName = (item) => {
-    const { userData } = this.state;
-    if(item.name && item.name.length){
+    const {userData} = this.state;
+    if (item.name && item.name.length) {
       return item.name;
     }
     if (item) {
@@ -116,7 +128,13 @@ class ClientScreen extends React.Component {
   };
 
   render() {
-    const { isLoading, userType } = this.state;
+    const {isLoading, userType, searchKey} = this.state;
+    const filteredUsers = this.props.list.filter((user) =>
+      searchKey && searchKey.trim().length && user.name
+        ? user.name.toLowerCase().indexOf(searchKey.trim().toLowerCase()) >= 0
+        : true,
+    );
+
     return isLoading ? (
       <View
         style={{
@@ -126,45 +144,45 @@ class ClientScreen extends React.Component {
         <Spinner color={colors.primary} />
       </View>
     ) : (
-        <View style={{ backgroundColor: colors.white }}>
-          <SearchInput />
-          <ScrollView
-            style={{
-              paddingVertical: 10,
-              paddingLeft: 10
-            }}
-            contentContainerStyle={{
-              paddingBottom: 50,
-            }}>
-            {this.props.list.map((item, index) => (
-              <ChatListItem
-                key={index}
-                imageUrl={item.coverUrl}
-                name={this.getChannelName(item)}
-                recentMsg={item.lastMessage ? item.lastMessage.message : ''}
-                time={
-                  item.lastMessage
-                    ? moment(
+      <View style={{backgroundColor: colors.white}}>
+        <SearchInput value={searchKey} onChangeText={this.onChangeSearch} />
+        <ScrollView
+          style={{
+            paddingVertical: 10,
+            paddingLeft: 10,
+          }}
+          contentContainerStyle={{
+            paddingBottom: 50,
+          }}>
+          {filteredUsers.map((item, index) => (
+            <ChatListItem
+              key={index}
+              imageUrl={item.coverUrl}
+              name={this.getChannelName(item)}
+              recentMsg={item.lastMessage ? item.lastMessage.message : ''}
+              time={
+                item.lastMessage
+                  ? moment(
                       new Date(item.lastMessage.createdAt).toLocaleTimeString(),
                       'HH:mm:ss',
                     ).format('hh:mm A')
-                    : ''
-                }
-                unreadMsgCount={item.unreadMessageCount}
-                showDoubleTick={false}
-                showSingleTick={false}
-                onPressChat={() => this.navigateToChat(item)}
-              />
-            ))}
-          </ScrollView>
-        </View>
-      );
+                  : ''
+              }
+              unreadMsgCount={item.unreadMessageCount}
+              showDoubleTick={false}
+              showSingleTick={false}
+              onPressChat={() => this.navigateToChat(item)}
+            />
+          ))}
+        </ScrollView>
+      </View>
+    );
   }
 }
 
-function mapStateToProps({ groupChannel, userInfo, user }) {
-  const { isLoading, list, channel } = groupChannel;
-  return { isLoading, list, channel, userInfo, user };
+function mapStateToProps({groupChannel, userInfo, user}) {
+  const {isLoading, list, channel} = groupChannel;
+  return {isLoading, list, channel, userInfo, user};
 }
 
 export default connect(mapStateToProps, {
