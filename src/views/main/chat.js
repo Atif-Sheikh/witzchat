@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Alert} from 'react-native';
+import {FlatList, Alert, Platform} from 'react-native';
 import {
   Container,
   Header,
@@ -159,6 +159,61 @@ class Chat extends React.Component {
 
   _onTextMessageChanged = (textMessage) => {
     this.setState({textMessage});
+  };
+
+  onAudioPress = () => {
+    const {channelUrl, isOpenChannel} = this.props.route.params;
+    Permissions.check(
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.MEDIA_LIBRARY
+        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+    ).then(async (response) => {
+      if (response === RESULTS.GRANTED) {
+        try {
+          const response = await DocumentPicker.pick({
+            type: [DocumentPicker.types.audio],
+          });
+          let source = {uri: response.uri};
+          if (response.name) {
+            source.name = response.name;
+          }
+          if (response.type) {
+            source.type = response.type;
+          }
+          this.props.onFileButtonPress(channelUrl, isOpenChannel, source);
+        } catch (err) {
+          if (DocumentPicker.isCancel(err)) {
+            Alert.alert(
+              'Permission denied',
+              'You declined the permission to access to your audio.',
+              [{text: 'OK'}],
+              {
+                cancelable: false,
+              },
+            );
+          } else {
+            throw err;
+          }
+        }
+      } else if (response === RESULTS.DENIED) {
+        Permissions.request(
+          Platform.OS === 'ios'
+            ? PERMISSIONS.IOS.PHOTO_LIBRARY
+            : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+        ).then((response) => {
+          this._onDocumentAddPress();
+        });
+      } else {
+        Alert.alert(
+          'Permission denied',
+          'You declined the permission to access to your audio.',
+          [{text: 'OK'}],
+          {
+            cancelable: false,
+          },
+        );
+      }
+    });
   };
 
   _onPhotoAddPress = () => {
@@ -362,7 +417,7 @@ class Chat extends React.Component {
             <Button transparent onPress={this._onPhotoAddPress}>
               <Icon name="camera" type="FontAwesome5" />
             </Button>
-            <Button transparent>
+            <Button transparent onPress={this.onAudioPress}>
               <Icon name="microphone" type="FontAwesome5" />
             </Button>
             <Button transparent onPress={this._onSendButtonPress}>
