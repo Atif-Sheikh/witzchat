@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {FlatList, Alert, Platform} from 'react-native';
+import {FlatList, Alert, Platform, PermissionsAndroid} from 'react-native';
 import {
   Container,
   Header,
@@ -18,6 +19,7 @@ import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 import Permissions, {PERMISSIONS, RESULTS} from 'react-native-permissions';
 import DocumentPicker from 'react-native-document-picker';
+import {AudioRecorder, AudioUtils} from 'react-native-audio';
 
 import {
   openChannelProgress,
@@ -56,6 +58,23 @@ class Chat extends React.Component {
     isLoading: false,
     previousMessageListQuery: null,
     textMessage: '',
+
+    startAudio: false,
+    hasPermission: false,
+    audioPath: `${
+      AudioUtils.DocumentDirectoryPath
+    }/${this.messageIdGenerator()}test.aac`,
+    playAudio: false,
+    fetchChats: false,
+    audioSettings: {
+      SampleRate: 22050,
+      Channels: 1,
+      AudioQuality: 'Low',
+      AudioEncoding: 'aac',
+      MeteringEnabled: true,
+      IncludeBase64: true,
+      AudioEncodingBitRate: 32000,
+    },
   };
   goBack = () => {
     this.props.navigation.navigate('Chats');
@@ -63,7 +82,54 @@ class Chat extends React.Component {
 
   componentDidMount = () => {
     this._init();
+    this.checkAudioPermissions();
   };
+
+  messageIdGenerator() {
+    // generates uuid.
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      let r = (Math.random() * 16) | 0,
+        v = c == 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+
+  checkAudioPermissions = () => {
+    this.checkPermission().then(async (hasPermission) => {
+      this.setState({hasPermission});
+      if (!hasPermission) {
+        return;
+      }
+      await AudioRecorder.prepareRecordingAtPath(
+        this.state.audioPath,
+        this.state.audioSettings,
+      );
+      AudioRecorder.onProgress = (data) => {
+        console.log(data, 'onProgress data');
+      };
+      AudioRecorder.onFinished = (data) => {
+        console.log(data, 'on finish');
+      };
+    });
+  };
+
+  checkPermission() {
+    if (Platform.OS !== 'android') {
+      return Promise.resolve(true);
+    }
+    const rationale = {
+      title: 'Microphone Permission',
+      message:
+        'WitzChat needs access to your microphone so you can record audio.',
+    };
+    return PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      rationale,
+    ).then((result) => {
+      console.log('Permission result:', result);
+      return result === true || result === PermissionsAndroid.RESULTS.GRANTED;
+    });
+  }
 
   _init = () => {
     this.props.initChatScreen();
@@ -161,59 +227,31 @@ class Chat extends React.Component {
     this.setState({textMessage});
   };
 
-  onAudioPress = () => {
-    const {channelUrl, isOpenChannel} = this.props.route.params;
-    Permissions.check(
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.MEDIA_LIBRARY
-        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-    ).then(async (response) => {
-      if (response === RESULTS.GRANTED) {
-        try {
-          const response = await DocumentPicker.pick({
-            type: [DocumentPicker.types.audio],
-          });
-          let source = {uri: response.uri};
-          if (response.name) {
-            source.name = response.name;
-          }
-          if (response.type) {
-            source.type = response.type;
-          }
-          this.props.onFileButtonPress(channelUrl, isOpenChannel, source);
-        } catch (err) {
-          if (DocumentPicker.isCancel(err)) {
-            Alert.alert(
-              'Permission denied',
-              'You declined the permission to access to your audio.',
-              [{text: 'OK'}],
-              {
-                cancelable: false,
-              },
-            );
-          } else {
-            throw err;
-          }
-        }
-      } else if (response === RESULTS.DENIED) {
-        Permissions.request(
-          Platform.OS === 'ios'
-            ? PERMISSIONS.IOS.PHOTO_LIBRARY
-            : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-        ).then((response) => {
-          this._onDocumentAddPress();
+  onAudioPress = async () => {
+    try {
+      const {channelUrl, isOpenChannel} = this.props.route.params;
+
+      if (!this.state.startAudio) {
+        this.setState({
+          startAudio: true,
         });
+        await AudioRecorder.startRecording();
       } else {
-        Alert.alert(
-          'Permission denied',
-          'You declined the permission to access to your audio.',
-          [{text: 'OK'}],
-          {
-            cancelable: false,
-          },
-        );
+        this.setState({startAudio: false});
+        await AudioRecorder.stopRecording();
+        const {audioPath} = this.state;
+        const fileName = `${this.messageIdGenerator()}.aac`;
+        const file = {
+          uri: Platform.OS === 'ios' ? audioPath : `file://${audioPath}`,
+          name: fileName,
+          type: 'audio/aac',
+        };
+
+        this.props.onFileButtonPress(channelUrl, isOpenChannel, file);
       }
-    });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   _onPhotoAddPress = () => {
@@ -418,7 +456,11 @@ class Chat extends React.Component {
               <Icon name="camera" type="FontAwesome5" />
             </Button>
             <Button transparent onPress={this.onAudioPress}>
-              <Icon name="microphone" type="FontAwesome5" />
+              <Icon
+                style={this.state.startAudio ? {color: 'red'} : {}}
+                name="microphone"
+                type="FontAwesome5"
+              />
             </Button>
             <Button transparent onPress={this._onSendButtonPress}>
               <Icon name="send" type="FontAwesome" />

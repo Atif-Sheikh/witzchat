@@ -92,5 +92,7 @@
     <string>$(PRODUCT_NAME) would like access to your photo gallery</string>
 	<key>UIDocumentPickerViewController</key>
     <string>$(PRODUCT_NAME) would like access to your document</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This sample uses the microphone to record your speech and convert it to text.</string>
 </dict>
 </plist>
